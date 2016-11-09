@@ -3,5 +3,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="C:/Users/Spencer/Desktop/classes12.zip"/>
+	<classpathentry kind="lib" path="lib/jxbrowser-6.7.1.jar"/>
+	<classpathentry kind="lib" path="lib/jxbrowser-linux32-6.7.1.jar"/>
+	<classpathentry kind="lib" path="lib/jxbrowser-linux64-6.7.1.jar"/>
+	<classpathentry kind="lib" path="lib/jxbrowser-mac-6.7.1.jar"/>
+	<classpathentry kind="lib" path="lib/jxbrowser-win-6.7.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Spencer/Desktop/CS304/CPSC304Project/lib/license.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

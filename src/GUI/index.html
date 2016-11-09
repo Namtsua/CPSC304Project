@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Spencer Austman's Webpage</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Droid%20Sans" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+<script>
+function HelloWorld() {
+    window.java.print('Hello Java!');
+}
+</script>
+<div id="login" class="container-fluid bg-4 text-center">
+    <h3>Login</h3>
+    <br>
+    <div class="login-form-1">
+        <form id="login-form" class="text-left">
+            <div class="login-form-main-message"></div>
+            <div class="main-login-form">
+                <div class="login-group">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="email" placeholder="Email Address">
+                    </div>
+                    <div class="form-group"
+>                        <input type="password" class="form-control" id="password" placeholder="Password">
+                    </div>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="button" onClick="HelloWorld();">Login</button>   
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".navbar a, footer a[href='#myPage']").on('click', function (event) {
+            if (this.hash !== "") {
+                event.preventDefault();
+                var hash = this.hash;
+
+                $('html, body').animate({
+                    scrollTop: $(hash).offset().top
+                }, 900, function () {
+                    window.location.hash = hash;
+                });
+            }
+        });
+
+        $(window).scroll(function () {
+            $(".slideanim").each(function () {
+                var pos = $(this).offset().top;
+
+                var winTop = $(window).scrollTop();
+                if (pos < winTop + 600) {
+                    $(this).addClass("slide");
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>
