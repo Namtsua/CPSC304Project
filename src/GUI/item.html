@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CPSC 304 Project</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Droid%20Sans" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+
+<style>
+    body {
+        font: 20px Droid Sans, sans-serif;
+        line-height: 1.8;
+        color: #f5f6f7;
+    }
+
+    p {
+        font-size: 32px;
+    }
+
+    .LogOutButton {position:absolute; top:5px; left:5px;}
+    .AdminModeButton {position:absolute; top:5px; right:10px;}
+    .scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+</style>
+
+
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+<script>
+function DisplayAdminView() {
+  window.adminView.load();
+}
+function DisplayMainView() {
+  window.mainView.load();
+}
+</script>
+
+<div class="LogOutButton" align="left">
+    <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayMainView();">
+    <span class="glyphicon glyphicon-menu-left"></span>Home
+    </button>
+</div>
+
+<div class="AdminModeButton">
+    <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayAdminView();">
+    Admin Mode<span class="glyphicon glyphicon-menu-right"></span>
+  </button>
+</div>
+<br>
+<p class="text-primary text-center">Shamazon Items</p>
+<p class="text-muted text-center"><small>Search for the Items That You Want!</small></p>
+
+<!--http://stackoverflow.com/questions/19227496/scrollable-menu-with-bootstrap-3-menu-expanding-its-container-when-it-should-n-->
+<!-- Updating dropdown: http://stackoverflow.com/questions/13437446/how-to-display-selected-item-in-bootstrap-button-dropdown-title-->
+<div class="container">
+    <div class="input-group">
+        <div class="input-group-btn">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">All
+            <span class="glyphicon glyphicon-menu-down"></span></button>
+            <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="#">All</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Item Type</li>
+                <li><a href="#">Book</a></li>
+                <li><a href="#">Film</a></li>
+                <li><a href="#">Audio</a></li>
+                <li><a href="#">Video Game</a></li>
+                <li><a href="#">TV Series</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Genre</li>
+                <li><a href="#">Comedy</a></li>
+                <li><a href="#">Horror</a></li>
+                <li><a href="#">Romance</a></li>
+                <li><a href="#">Adventure</a></li>
+                <li><a href="#">Action</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Age</li>
+                <li><a href="#">Under 6</a></li>
+                <li><a href="#">7-17</a></li>
+                <li><a href="#">18+</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Rating</li>
+                <li><a href="#">1 Star</a></li>
+                <li><a href="#">2 Stars</a></li>
+                <li><a href="#">3 Stars</a></li>
+                <li><a href="#">4 Stars</a></li>
+                <li><a href="#">5 Stars</a></li>
+            </ul>
+        </div> <!--/btn-group -->
+        <input type="text" class="form-control" placeholder="Search for...">
+        <div class="input-group-btn">
+        <button class="btn btn-default" type="button">Go!</button>
+        </div>
+</div>
+</div>
+<br>
+<br>
+<p class="text-muted text-center"><small>Don't know where to start? Try these!</small></p>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-sm btn-primary pull-right">
+                <span class="glyphicon glyphicon glyphicon-thumbs-up"></span> Highest Rated Items
+        </div>
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-sm btn-primary pull-left">
+                <span class="glyphicon glyphicon glyphicon-thumbs-down"></span> Lowest Rated Items
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-sm btn-primary pull-right">
+                <span class="glyphicon glyphicon-stats"></span> Most Reviewed Items
+        </div>
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-sm btn-primary pull-left">
+                <span class="glyphicon glyphicon glyphicon-globe"></span> Items Available In Your Country
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(".dropdown-menu li a").click(function(){
+  $(this).parents(".input-group-btn").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+  $(this).parents(".input-group-btn").find('.btn').val($(this).data('value'));
+});
+</script>
+</body>
+</html>

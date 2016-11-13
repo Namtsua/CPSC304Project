@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CPSC 304 Project</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Droid%20Sans" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+
+<style>
+    body {
+        font: 20px Droid Sans, sans-serif;
+        line-height: 1.8;
+        color: #f5f6f7;
+    }
+
+    p {
+        font-size: 32px;
+    }
+
+    .ReturnButton {position:absolute; top:5px; left:5px;}
+    .AdminModeButton {position:absolute; top:5px; right:10px;}
+    .scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+</style>
+
+
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+<script>
+function DisplayMainView() {
+  window.mainView.load();
+}
+</script>
+
+<div class="ReturnButton" align="left">
+    <button type="button" class="btn btn-sm btn-primary" onClick="DisplayMainView();">
+    <span class="glyphicon glyphicon-menu-left"></span>Back to previous page
+    </button>
+</div>
+<br>
+
+<div class="container">
+  <form>
+    <h3 class="text-primary">Find User</h3>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">User ID</label>
+      <div class="col-xs-6">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="Item ID">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="offset-sm-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">Add Item</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="container">
+  <form>
+    <h3 class="text-primary">Add User</h3>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Full Name</label>
+      <div class="col-xs-6">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="Name">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Date Of Birth</label>
+      <div class="col-xs-6">
+        <input type="DOB" class="form-control" id="inputPassword3" placeholder="DD/MM/YYYY">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Email</label>
+      <div class="col-xs-6">
+        <input type="DOB" class="form-control" id="inputPassword3" placeholder="Email">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Country</label>
+      <div class="col-xs-6">
+        <input type="DOB" class="form-control" id="inputPassword3" placeholder="Country">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="offset-sm-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">Create User</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="container">
+  <form>
+    <h3 class="text-primary">Evaluate Review</h3>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Review ID</label>
+      <div class="col-xs-6">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="Review ID">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Evaluation</label>
+      <div class="col-xs-6">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Pending
+            <span class="glyphicon glyphicon-menu-down"></span></button>
+            <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="#">Pending</a></li>
+                <li><a href="#">Approved</a></li>
+                <li><a href="#">Rejected</a></li>
+
+            </ul>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="offset-sm-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">Create User</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="container">
+  <form>
+    <h3 class="text-primary">Add Item</h3>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Item ID</label>
+      <div class="col-xs-6">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="Item ID">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Item Name</label>
+      <div class="col-xs-6">
+        <input type="DOB" class="form-control" id="inputPassword3" placeholder="Name">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Age Restriction</label>
+      <div class="col-xs-6">
+        <input type="DOB" class="form-control" id="inputPassword3" placeholder="Age Restriction">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Purchase Link</label>
+      <div class="col-xs-6">
+        <input type="DOB" class="form-control" id="inputPassword3" placeholder="Link">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Country</label>
+      <div class="col-xs-6">
+        <input type="DOB" class="form-control" id="inputPassword3" placeholder="Country">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="offset-sm-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">Add Item</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="container">
+  <form>
+    <h3 class="text-primary">Remove Item</h3>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Item ID</label>
+      <div class="col-xs-6">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="Item ID">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="offset-sm-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">Add Item</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="container">
+  <form>
+    <h3 class="text-primary">Remove User</h3>
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">User ID</label>
+      <div class="col-xs-6">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="User ID">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="offset-sm-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">Add Item</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+    $(".dropdown-menu li a").click(function(){
+  $(this).parents(".form-group").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+  $(this).parents(".form-group").find('.btn').val($(this).data('value'));
+});
+</script>
+</body>
+</html>
