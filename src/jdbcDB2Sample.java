@@ -50,67 +50,238 @@ class jdbcDB2Sample
 		//         frame.setSize(300, 75);
 		//         frame.setLocationRelativeTo(null);
 		//         frame.setVisible(true);
-		LoginView lv = new LoginView();
-		lv.load();
+		final Browser browser = new Browser();
+		BrowserView browserView = new BrowserView(browser);
+		final JFrame frame = new JFrame("Shamazon"); 	
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		frame.add(browserView, BorderLayout.CENTER);
+		frame.setSize(700, 500);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		browser.addScriptContextListener(new ScriptContextAdapter() {
+			@Override
+			public void onScriptContextCreated(ScriptContextEvent event) {
+				Browser browser = event.getBrowser();
+				JSValue window = browser.executeJavaScriptAndReturnValue("window");
+				MainView mv = new MainView();
+				mv.setParentFrame(frame);
+				mv.setParentBrowser(browser);
+				window.asObject().setProperty("mainView", mv);
+
+			}  
+		});
+		browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/index.html");
 	}
 
 	public static class LoginView {
+		private JFrame parent;
+		private Browser browser;
 		public void load() {
-			final Browser browser = new Browser();
-			BrowserView browserView = new BrowserView(browser);
-			final JFrame frame = new JFrame("MediaWiki"); 	
-			frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			frame.add(browserView, BorderLayout.CENTER);
-			frame.setSize(700, 500);
-			frame.setLocationRelativeTo(null);
-			frame.setVisible(true);
-			browser.addScriptContextListener(new ScriptContextAdapter() {
+			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/index.html");
+			final JFrame parent = this.parent;
+			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
+			// Embed Browser Swing component into the dialog.
+			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
+			//	this.parent.setSize(700, 500);	
+			parent.setResizable(false);
+			parent.setLocationRelativeTo(null);
+			parent.setVisible(true);
+
+			this.browser.addScriptContextListener(new ScriptContextAdapter() {
 				@Override
 				public void onScriptContextCreated(ScriptContextEvent event) {
 					Browser browser = event.getBrowser();
 					JSValue window = browser.executeJavaScriptAndReturnValue("window");
-					UserView uv = new UserView();
-					uv.setParentFrame(frame);
-					uv.setParentBrowser(browser);
-					window.asObject().setProperty("userView", uv);
-					
+					MainView mv = new MainView();
+					mv.setParentFrame(parent);
+					mv.setParentBrowser(browser);
+					window.asObject().setProperty("mainView", mv);					
 				}  
 			});
-			browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/index.html");
-			
-		}
-	}
-
-	public static class UserView {
-		private JFrame parent;
-		private Browser browser;
-		// 	public void close(
-		public void load() {
-			//    	System.out.println(asdf);
-		//	this.parent.setVisible(false);
-	//		final Browser browser = new Browser();
-			//final JFrame parent = new JFrame("test");
-		//	final JFrame dialog = new JFrame("Media");
-			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/user.html");
-			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
-			// Embed Browser Swing component into the dialog.
-			this.parent.add(new BrowserView(browser), BorderLayout.CENTER);
-			this.parent.setSize(700, 500);	
-			this.parent.setResizable(false);
-			this.parent.setLocationRelativeTo(null);
-			this.parent.setVisible(true);
-			connection();
+			//connection();
 		}
 
 		public void setParentFrame(JFrame parent){
 			this.parent = parent;
 		}
-		
+
 		public void setParentBrowser(Browser browser){
 			this.browser = browser;
 		}
 	}
 
+	public static class MainView {
+		private JFrame parent;
+		private Browser browser;
+		public void load() {
+			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/main.html");
+			final JFrame parent = this.parent;
+			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
+			// Embed Browser Swing component into the dialog.
+			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
+			//	this.parent.setSize(700, 500);	
+			parent.setResizable(false);
+			parent.setLocationRelativeTo(null);
+			parent.setVisible(true);
+
+			this.browser.addScriptContextListener(new ScriptContextAdapter() {
+				@Override
+				public void onScriptContextCreated(ScriptContextEvent event) {
+					Browser browser = event.getBrowser();
+					JSValue window = browser.executeJavaScriptAndReturnValue("window");
+					LoginView lv = new LoginView();
+					lv.setParentFrame(parent);
+					lv.setParentBrowser(browser);
+					AdminView av = new AdminView();
+					av.setParentFrame(parent);
+					av.setParentBrowser(browser);
+					ItemView iv = new ItemView();
+					iv.setParentFrame(parent);
+					iv.setParentBrowser(browser);
+					ReviewView rv = new ReviewView();
+					rv.setParentFrame(parent);
+					rv.setParentBrowser(browser);
+					window.asObject().setProperty("loginView", lv);
+					window.asObject().setProperty("adminView", av);
+					window.asObject().setProperty("itemView", iv);
+					window.asObject().setProperty("reviewView", rv);					
+				}  
+			});
+			//connection();
+		}
+
+		public void setParentFrame(JFrame parent){
+			this.parent = parent;
+		}
+
+		public void setParentBrowser(Browser browser){
+			this.browser = browser;
+		}
+	}
+
+	public static class AdminView {
+		private JFrame parent;
+		private Browser browser;
+		public void load() {
+			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/admin.html");
+			final JFrame parent = this.parent;
+
+			parent.setResizable(false);
+			parent.setLocationRelativeTo(null);
+			parent.setVisible(true);
+			this.browser.addScriptContextListener(new ScriptContextAdapter() {
+				@Override
+				public void onScriptContextCreated(ScriptContextEvent event) {
+					Browser browser = event.getBrowser();
+					JSValue window = browser.executeJavaScriptAndReturnValue("window");
+					AdminView av = new AdminView();
+					av.setParentFrame(parent);
+					av.setParentBrowser(browser);
+					MainView mv = new MainView();
+					mv.setParentFrame(parent);
+					mv.setParentBrowser(browser);
+					window.asObject().setProperty("adminView", av);
+					window.asObject().setProperty("mainView", mv);					
+				}  
+			});
+			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
+			// Embed Browser Swing component into the dialog.
+			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
+			//	this.parent.setSize(700, 500);
+			//connection();
+		}
+
+		public void setParentFrame(JFrame parent){
+			this.parent = parent;
+		}
+
+		public void setParentBrowser(Browser browser){
+			this.browser = browser;
+		}
+	}
+	public static class ReviewView {
+		private JFrame parent;
+		private Browser browser;
+		public void load() {
+			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/review.html");
+			final JFrame parent = this.parent;
+
+			parent.setResizable(false);
+			parent.setLocationRelativeTo(null);
+			parent.setVisible(true);
+			this.browser.addScriptContextListener(new ScriptContextAdapter() {
+				@Override
+				public void onScriptContextCreated(ScriptContextEvent event) {
+					Browser browser = event.getBrowser();
+					JSValue window = browser.executeJavaScriptAndReturnValue("window");
+					AdminView av = new AdminView();
+					av.setParentFrame(parent);
+					av.setParentBrowser(browser);
+					MainView mv = new MainView();
+					mv.setParentFrame(parent);
+					mv.setParentBrowser(browser);
+					window.asObject().setProperty("adminView", av);
+					window.asObject().setProperty("mainView", mv);					
+				}  
+			});
+
+			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
+			// Embed Browser Swing component into the dialog.
+			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
+			//	this.parent.setSize(700, 500);
+			//connection();
+		}
+
+		public void setParentFrame(JFrame parent){
+			this.parent = parent;
+		}
+
+		public void setParentBrowser(Browser browser){
+			this.browser = browser;
+		}
+	}
+	public static class ItemView {
+		private JFrame parent;
+		private Browser browser;
+		public void load() {
+			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/item.html");
+			final JFrame parent = this.parent;
+			parent.setResizable(false);
+			parent.setLocationRelativeTo(null);
+			parent.setVisible(true);
+			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
+			// Embed Browser Swing component into the dialog.
+			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
+			//	this.parent.setSize(700, 500);	
+
+			this.browser.addScriptContextListener(new ScriptContextAdapter() {
+				@Override
+				public void onScriptContextCreated(ScriptContextEvent event) {
+					Browser browser = event.getBrowser();
+					JSValue window = browser.executeJavaScriptAndReturnValue("window");
+					AdminView av = new AdminView();
+					av.setParentFrame(parent);
+					av.setParentBrowser(browser);
+					MainView mv = new MainView();
+					mv.setParentFrame(parent);
+					mv.setParentBrowser(browser);
+					window.asObject().setProperty("adminView", av);
+					window.asObject().setProperty("mainView", mv);					
+				}  
+			});
+
+			//connection();
+		}
+
+		public void setParentFrame(JFrame parent){
+			this.parent = parent;
+		}
+
+		public void setParentBrowser(Browser browser){
+			this.browser = browser;
+		}
+	}
 
 
 	private static void connection() {

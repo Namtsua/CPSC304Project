@@ -36,18 +36,22 @@
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
 <script>
-function DisplayUserView() {
-    window.userView.load();
+function DisplayAdminView() {
+  window.adminView.load();
+}
+function DisplayMainView() {
+  window.mainView.load();
 }
 </script>
+
 <div class="LogOutButton" align="left">
-    <button type="button" class="btn btn-sm btn-primary btn-block">
+    <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayMainView();">
     <span class="glyphicon glyphicon-menu-left"></span>Home
     </button>
 </div>
 
 <div class="AdminModeButton">
-    <button type="button" class="btn btn-sm btn-primary btn-block">
+    <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayAdminView();">
     Admin Mode<span class="glyphicon glyphicon-menu-right"></span>
   </button>
 </div>
@@ -63,6 +67,8 @@ function DisplayUserView() {
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">All
             <span class="glyphicon glyphicon-menu-down"></span></button>
             <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="#">All</a></li>
+                <li class="divider"></li>
                 <li class="dropdown-header">Item Type</li>
                 <li><a href="#">Book</a></li>
                 <li><a href="#">Film</a></li>
@@ -90,7 +96,10 @@ function DisplayUserView() {
                 <li><a href="#">5 Stars</a></li>
             </ul>
         </div> <!--/btn-group -->
-        <input type="text" class="form-control" aria-label="dropdownMenu1">
+        <input type="text" class="form-control" placeholder="Search for...">
+        <div class="input-group-btn">
+        <button class="btn btn-default" type="button">Go!</button>
+        </div>
 </div>
 </div>
 <br>
@@ -112,11 +121,11 @@ function DisplayUserView() {
     <div class="row">
         <div class="col-xs-6">
             <button type="button" class="btn btn-sm btn-primary pull-right">
-                <span class="glyphicon glyphicon glyphicon-globe"></span> Items Available In Your Country
+                <span class="glyphicon glyphicon-stats"></span> Most Reviewed Items
         </div>
         <div class="col-xs-6">
             <button type="button" class="btn btn-sm btn-primary pull-left">
-                <span class="glyphicon glyphicon-stats"></span> Most Reviewed Items
+                <span class="glyphicon glyphicon glyphicon-globe"></span> Items Available In Your Country
         </div>
     </div>
 </div>
