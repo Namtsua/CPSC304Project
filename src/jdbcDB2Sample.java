@@ -181,8 +181,10 @@ class jdbcDB2Sample
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
+					AdminQuery aq = new AdminQuery();
 					window.asObject().setProperty("adminView", av);
-					window.asObject().setProperty("mainView", mv);					
+					window.asObject().setProperty("mainView", mv);
+					window.asObject().setProperty("adminQuery", aq);
 				}  
 			});
 			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
@@ -221,8 +223,10 @@ class jdbcDB2Sample
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
+					SearchQuery sq = new SearchQuery();
 					window.asObject().setProperty("adminView", av);
-					window.asObject().setProperty("mainView", mv);					
+					window.asObject().setProperty("mainView", mv);
+					window.asObject().setProperty("searchQuery", sq);
 				}  
 			});
 
@@ -266,8 +270,10 @@ class jdbcDB2Sample
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
+					SearchQuery sq = new SearchQuery();
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);					
+					window.asObject().setProperty("searchQuery", sq);
 				}  
 			});
 
@@ -281,9 +287,80 @@ class jdbcDB2Sample
 		public void setParentBrowser(Browser browser){
 			this.browser = browser;
 		}
+		
 	}
 
 
+	public static class SearchQuery {
+		public void search(String filter, String inputText) {
+			System.out.println(filter + " and " + inputText);
+		}
+		
+		public void searchPredefined(String searchID){
+			System.out.println(searchID);
+			switch(searchID){
+			case "Highest Rated Items":
+				highestRatedItems();
+				break;
+			case "Lowest Rated Items":
+				lowerRatedItems();
+				break;
+			case "Most Reviewed Items":
+				mostReviewedItems();
+				break;
+			case "Items Available In Your Country":
+				currentCountryAvailability();
+				break;
+			case "Highest Rated Reviews":
+				highestRatedReviews();
+				break;
+			case "Lowest Rated Reviews":
+				lowerRatedReviews();
+				break;
+			default:
+					break;
+			}
+		}
+		
+		private void highestRatedItems(){
+			
+		}
+		
+		private void lowerRatedItems(){
+			
+		}
+		
+		private void mostReviewedItems(){
+			
+		}
+		
+		private void currentCountryAvailability(){
+			
+		}
+		
+		private void highestRatedReviews(){
+			
+		}
+		
+		private void lowerRatedReviews(){
+			
+		}
+	}
+	
+	public static class AdminQuery{
+		public void remove(String ID){
+			System.out.println(ID);
+		}
+		
+		public void addUser(String name, String DOB, String email, String country){
+			System.out.println(name + " AND " + DOB + " AND " + email + " AND " + country);
+		}
+		
+		public void addItem(String ID, String name, String ageRestriction, String link, String country){
+			System.out.println(ID + " AND " + name + " AND " + ageRestriction + " AND " + link + " AND " + country);
+		}
+	}
+	
 	private static void connection() {
 
 		Connection con = null;
