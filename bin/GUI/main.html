@@ -32,18 +32,35 @@
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
 <script>
+function DisplayLoginView(){
+  window.loginView.load();
+}
 function DisplayUserView() {
     window.userView.load();
 }
+function DisplayAdminView() {
+  window.adminView.load();
+}
+function DisplayItemView() {
+  window.itemView.load();
+}
+function DisplayReviewView() {
+  window.reviewView.load();
+}
 </script>
+
+
+
+
+
 <div class="LogOutButton" align="left">
-    <button type="button" class="btn btn-sm btn-primary btn-block">
+    <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayLoginView();">
     <span class="glyphicon glyphicon-menu-left"></span>Log Out
   </button>
 </div>
 
 <div class="AdminModeButton">
-    <button type="button" class="btn btn-sm btn-primary btn-block">
+    <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayAdminView();">
     Admin Mode<span class="glyphicon glyphicon-menu-right"></span>
   </button>
 </div>
@@ -54,12 +71,12 @@ function DisplayUserView() {
 <br>
 <div class="row">
         <div class="col-xs-6">
-            <button type="button" class="btn btn-sm btn-primary pull-right">
+            <button type="button" class="btn btn-sm btn-primary pull-right" onClick="DisplayItemView();">
               <span class="glyphicon glyphicon-search"></span> Search for Shamazon Items
             </button>
 </div>
         <div class="col-xs-6">
-            <button type="button" class="btn btn-sm btn-primary pull-left">
+            <button type="button" class="btn btn-sm btn-primary pull-left" onClick="DisplayReviewView();">
               <span class="glyphicon glyphicon-user"></span> Search for Shamazon Reviews
             </button>
 </div>

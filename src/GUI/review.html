@@ -42,6 +42,14 @@ function DisplayAdminView() {
 function DisplayMainView() {
   window.mainView.load();
 }
+function Query() {
+    var input = document.getElementById('SearchInput').value;
+    window.searchQuery.search(filter, input);
+}
+
+function QueryPredefined(buttonID) {
+    window.searchQuery.searchPredefined(buttonID);
+}
 </script>
 
 
@@ -65,16 +73,16 @@ function DisplayMainView() {
 <div class="container">
     <div class="input-group">
         <div class="input-group-btn">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">All
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Item
             <span class="glyphicon glyphicon-menu-down"></span></button>
             <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu1">
                 <li><a href="#">Item</a></li>
                 <li><a href="#">User</a></li>
             </ul>
         </div> <!--/btn-group -->
-        <input type="text" class="form-control" placeholder="Search by item name or user ID...">
+        <input type="text" id="SearchInput" class="form-control" placeholder="Search by item name or user ID...">
         <div class="input-group-btn">
-        <button class="btn btn-default" type="button">Go!</button>
+        <button class="btn btn-default" type="button" onClick="Query();">Go!</button>
         </div>
 </div>
 </div>
@@ -85,11 +93,11 @@ function DisplayMainView() {
 <div class="container">
     <div class="row">
         <div class="col-xs-6">
-            <button type="button" class="btn btn-sm btn-primary pull-right">
+            <button type="button" class="btn btn-sm btn-primary pull-right"  onClick="QueryPredefined($(this).text().trim());">
                 <span class="glyphicon glyphicon glyphicon-thumbs-up"></span> Highest Rated Reviews
         </div>
         <div class="col-xs-6">
-            <button type="button" class="btn btn-sm btn-primary pull-left">
+            <button type="button" class="btn btn-sm btn-primary pull-left" onClick="QueryPredefined($(this).text().trim());">
                 <span class="glyphicon glyphicon glyphicon-thumbs-down"></span> Lowest Rated Reviews
         </div>
     </div>
@@ -97,7 +105,7 @@ function DisplayMainView() {
     <div class="row">
         <div class="col-xs-6"></div>
         <div class="col-xs-6">
-            <button type="button" class="btn btn-sm btn-primary pull-left">
+            <button type="button" class="btn btn-sm btn-primary pull-left" onClick="QueryPredefined($(this).text().trim());">
                 <span class="glyphicon glyphicon-stats"></span> Most Reviewed Items
         </div>
     </div>
@@ -105,9 +113,12 @@ function DisplayMainView() {
 
 
 <script>
+
+var filter = "Item";
     $(".dropdown-menu li a").click(function(){
   $(this).parents(".input-group-btn").find('.btn').html($(this).text() + ' <span class="caret"></span>');
   $(this).parents(".input-group-btn").find('.btn').val($(this).data('value'));
+  filter = $(this).text();
 });
 </script>
 </body>

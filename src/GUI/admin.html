@@ -39,6 +39,29 @@
 function DisplayMainView() {
   window.mainView.load();
 }
+function RemoveUser() {
+  var UserID = document.getElementById('RemovedUserID').value;
+  window.adminQuery.remove(UserID);
+}
+function RemoveItem() {
+  var ItemID = document.getElementById('RemovedItemID').value;
+  window.adminQuery.remove(ItemID);
+}
+function AddUser() {
+  var name = document.getElementById('UserName').value;
+  var DOB = document.getElementById('DateOfBirth').value;
+  var email = document.getElementById('UserEmail').value;
+  var country = document.getElementById('UserCountry').value;
+  window.adminQuery.addUser(name, DOB, email, country);
+}
+function AddItem() {
+  var IID = document.getElementById('AddedItemID').value;
+  var itemName = document.getElementById('ItemName').value;
+  var ageRestriction = document.getElementById('AgeRestriction').value;
+  var link = document.getElementById('PurchaseLink').value;
+  var country = document.getElementById('ItemCountry').value;
+  window.adminQuery.addItem(IID, itemName, ageRestriction, link, country);
+}
 </script>
 
 <div class="ReturnButton" align="left">
@@ -69,32 +92,32 @@ function DisplayMainView() {
   <form>
     <h3 class="text-primary">Add User</h3>
     <div class="form-group row">
-      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Full Name</label>
+      <label for="UserName" class="col-xs-3 col-form-label text-muted">Full Name</label>
       <div class="col-xs-6">
-        <input type="email" class="form-control" id="inputEmail3" placeholder="Name">
+        <input type="email" class="form-control" id="UserName" placeholder="Name">
       </div>
     </div>
     <div class="form-group row">
-      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Date Of Birth</label>
+      <label for="DateOfBirth" class="col-xs-3 col-form-label text-muted">Date Of Birth</label>
       <div class="col-xs-6">
-        <input type="DOB" class="form-control" id="inputPassword3" placeholder="DD/MM/YYYY">
+        <input type="DOB" class="form-control" id="DateOfBirth" placeholder="DD/MM/YYYY">
       </div>
     </div>
     <div class="form-group row">
-      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Email</label>
+      <label for="UserEmail" class="col-xs-3 col-form-label text-muted">Email</label>
       <div class="col-xs-6">
-        <input type="DOB" class="form-control" id="inputPassword3" placeholder="Email">
+        <input type="DOB" class="form-control" id="UserEmail" placeholder="Email">
       </div>
     </div>
     <div class="form-group row">
-      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Country</label>
+      <label for="UserCountry" class="col-xs-3 col-form-label text-muted">Country</label>
       <div class="col-xs-6">
-        <input type="DOB" class="form-control" id="inputPassword3" placeholder="Country">
+        <input type="DOB" class="form-control" id="UserCountry" placeholder="Country">
       </div>
     </div>
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <button type="submit" class="btn btn-primary">Create User</button>
+        <button type="submit" class="btn btn-primary" onClick="AddUser();">Create User</button>
       </div>
     </div>
   </form>
@@ -134,38 +157,38 @@ function DisplayMainView() {
   <form>
     <h3 class="text-primary">Add Item</h3>
     <div class="form-group row">
-      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Item ID</label>
+      <label for="AddedItemID" class="col-xs-3 col-form-label text-muted">Item ID</label>
       <div class="col-xs-6">
-        <input type="email" class="form-control" id="inputEmail3" placeholder="Item ID">
+        <input type="email" class="form-control" id="AddedItemID" placeholder="Item ID">
       </div>
     </div>
     <div class="form-group row">
-      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Item Name</label>
+      <label for="ItemName" class="col-xs-3 col-form-label text-muted">Item Name</label>
       <div class="col-xs-6">
-        <input type="DOB" class="form-control" id="inputPassword3" placeholder="Name">
+        <input type="DOB" class="form-control" id="ItemName" placeholder="Name">
       </div>
     </div>
     <div class="form-group row">
-      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Age Restriction</label>
+      <label for="AgeRestriction" class="col-xs-3 col-form-label text-muted">Age Restriction</label>
       <div class="col-xs-6">
-        <input type="DOB" class="form-control" id="inputPassword3" placeholder="Age Restriction">
+        <input type="DOB" class="form-control" id="AgeRestriction" placeholder="Age Restriction">
       </div>
     </div>
     <div class="form-group row">
-      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Purchase Link</label>
+      <label for="PurchaseLink" class="col-xs-3 col-form-label text-muted">Purchase Link</label>
       <div class="col-xs-6">
-        <input type="DOB" class="form-control" id="inputPassword3" placeholder="Link">
+        <input type="DOB" class="form-control" id="PurchaseLink" placeholder="Link">
       </div>
     </div>
     <div class="form-group row">
-      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Country</label>
+      <label for="ItemCountry" class="col-xs-3 col-form-label text-muted">Country</label>
       <div class="col-xs-6">
-        <input type="DOB" class="form-control" id="inputPassword3" placeholder="Country">
+        <input type="DOB" class="form-control" id="ItemCountry" placeholder="Country">
       </div>
     </div>
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <button type="submit" class="btn btn-primary">Add Item</button>
+        <button type="submit" class="btn btn-primary" onClick="AddItem();">Add Item</button>
       </div>
     </div>
   </form>
@@ -175,14 +198,14 @@ function DisplayMainView() {
   <form>
     <h3 class="text-primary">Remove Item</h3>
     <div class="form-group row">
-      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">Item ID</label>
+      <label for="RemovedItemID" class="col-xs-3 col-form-label text-muted">Item ID</label>
       <div class="col-xs-6">
-        <input type="email" class="form-control" id="inputEmail3" placeholder="Item ID">
+        <input type="email" id="RemovedItemID" class="form-control" placeholder="Item ID">
       </div>
     </div>
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <button type="submit" class="btn btn-primary">Add Item</button>
+        <button type="submit" class="btn btn-primary" onClick="RemoveItem();">Remove</button>
       </div>
     </div>
   </form>
@@ -192,14 +215,14 @@ function DisplayMainView() {
   <form>
     <h3 class="text-primary">Remove User</h3>
     <div class="form-group row">
-      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">User ID</label>
+      <label for="RemovedUserID" class="col-xs-3 col-form-label text-muted">User ID</label>
       <div class="col-xs-6">
-        <input type="email" class="form-control" id="inputEmail3" placeholder="User ID">
+        <input type="email" id="RemovedUserID" class="form-control" placeholder="User ID">
       </div>
     </div>
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <button type="submit" class="btn btn-primary">Add Item</button>
+        <button type="submit" class="btn btn-primary" onClick="RemoveUser();">Remove</button>
       </div>
     </div>
   </form>
