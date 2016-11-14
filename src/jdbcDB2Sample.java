@@ -52,7 +52,8 @@ class jdbcDB2Sample
 		//         frame.setVisible(true);
 		final Browser browser = new Browser();
 		BrowserView browserView = new BrowserView(browser);
-		final JFrame frame = new JFrame("Shamazon"); 	
+		final JFrame frame = new JFrame("Shamazon");
+		final Connection con = connection();
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.add(browserView, BorderLayout.CENTER);
 		frame.setSize(700, 500);
@@ -67,6 +68,7 @@ class jdbcDB2Sample
 				MainView mv = new MainView();
 				mv.setParentFrame(frame);
 				mv.setParentBrowser(browser);
+				mv.setConnection(con);
 				window.asObject().setProperty("mainView", mv);
 
 			}  
@@ -114,9 +116,12 @@ class jdbcDB2Sample
 	public static class MainView {
 		private JFrame parent;
 		private Browser browser;
+		private Connection con;
+		
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/main.html");
 			final JFrame parent = this.parent;
+			final Connection con = this.con;
 			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
 			// Embed Browser Swing component into the dialog.
 			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
@@ -136,12 +141,15 @@ class jdbcDB2Sample
 					AdminView av = new AdminView();
 					av.setParentFrame(parent);
 					av.setParentBrowser(browser);
+					av.setConnection(con);
 					ItemView iv = new ItemView();
 					iv.setParentFrame(parent);
 					iv.setParentBrowser(browser);
+					iv.setConnection(con);
 					ReviewView rv = new ReviewView();
 					rv.setParentFrame(parent);
 					rv.setParentBrowser(browser);
+					iv.setConnection(con);
 					window.asObject().setProperty("loginView", lv);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("itemView", iv);
@@ -158,15 +166,20 @@ class jdbcDB2Sample
 		public void setParentBrowser(Browser browser){
 			this.browser = browser;
 		}
+		
+		public void setConnection(Connection con){
+			this.con = con;
+		}
 	}
 
 	public static class AdminView {
 		private JFrame parent;
 		private Browser browser;
+		private Connection con;
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/admin.html");
 			final JFrame parent = this.parent;
-
+			final Connection con = this.con;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -182,6 +195,7 @@ class jdbcDB2Sample
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
 					AdminQuery aq = new AdminQuery();
+					aq.setConnection(con);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);
 					window.asObject().setProperty("adminQuery", aq);
@@ -201,14 +215,20 @@ class jdbcDB2Sample
 		public void setParentBrowser(Browser browser){
 			this.browser = browser;
 		}
+		
+		public void setConnection(Connection con) {
+			this.con = con;
+		}
 	}
+	
 	public static class ReviewView {
 		private JFrame parent;
 		private Browser browser;
+		private Connection con;
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/review.html");
 			final JFrame parent = this.parent;
-
+			final Connection con = this.con;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -224,6 +244,7 @@ class jdbcDB2Sample
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
 					SearchQuery sq = new SearchQuery();
+					sq.setConnection(con);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);
 					window.asObject().setProperty("searchQuery", sq);
@@ -244,13 +265,20 @@ class jdbcDB2Sample
 		public void setParentBrowser(Browser browser){
 			this.browser = browser;
 		}
+
+		public void setConnection(Connection con) {
+			this.con = con;
+		}
 	}
 	public static class ItemView {
 		private JFrame parent;
 		private Browser browser;
+		private Connection con;
+		
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/item.html");
 			final JFrame parent = this.parent;
+			final Connection con = this.con;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -271,6 +299,7 @@ class jdbcDB2Sample
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
 					SearchQuery sq = new SearchQuery();
+					sq.setConnection(con);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);					
 					window.asObject().setProperty("searchQuery", sq);
@@ -287,13 +316,35 @@ class jdbcDB2Sample
 		public void setParentBrowser(Browser browser){
 			this.browser = browser;
 		}
-		
+
+		public void setConnection(Connection con) {
+			this.con = con;
+		}
 	}
 
 
 	public static class SearchQuery {
+		
+		private Connection con;
 		public void search(String filter, String inputText) {
+			String[] queries;
 			System.out.println(filter + " and " + inputText);
+		//	switch(filter) {
+	//		case "All":
+		//		queries = new String[3];
+		//		queries[0] = "DROP VIEW result;";
+		//		queries[1] = "CREATE VIEW result "
+		//				+ "AS SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre "
+		//				+ "FROM Item "
+		//				+ "WHERE CAST(item_id AS TEXT) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’;";
+		//		queries[2] = "SELECT * FROM result;";
+		//		SendQuery(con, queries);
+	//			break;
+	//		}
+			
+			
+//			Connection con = connection();
+			SendQuery(this.con, "");
 		}
 		
 		public void searchPredefined(String searchID){
@@ -345,9 +396,15 @@ class jdbcDB2Sample
 		private void lowerRatedReviews(){
 			
 		}
+		
+		public void setConnection(Connection con) {
+			this.con = con;
+		}
 	}
 	
 	public static class AdminQuery{
+		private Connection con;
+		
 		public void remove(String ID){
 			System.out.println(ID);
 		}
@@ -359,9 +416,41 @@ class jdbcDB2Sample
 		public void addItem(String ID, String name, String ageRestriction, String link, String country){
 			System.out.println(ID + " AND " + name + " AND " + ageRestriction + " AND " + link + " AND " + country);
 		}
+		
+		public void setConnection(Connection con){
+			this.con = con;
+		}
 	}
 	
-	private static void connection() {
+	private static void SendQuery(Connection con, String query) {
+		try
+		{
+			Statement stmt = con.createStatement();
+			// Create item table as per spec
+	//		stmt.executeQuery("create table Item(item_id int not null, genre varchar(20), name varchar(50) not null, age_restriction int, purchase_link varchar(100),rating float not null , primary key (item_id))");
+	//		System.out.println("Table has been created");
+			// Insert Item tuples
+	//		stmt.executeQuery("insert into Item values(12051, 'Comedy', 'Home Alone', null, null, 9.5)");
+	//		System.out.println("Inserted new Item");
+	//		stmt.executeQuery("insert into Item values(49457, 'Horror', 'It Follows', 18, null, 7.1)");
+	//		System.out.println("Inserted new Item");
+	//		stmt.executeQuery("insert into Item values(29316, 'Romance', 'Twilight', null, 'https://www.amazon.com/Twilight-Saga-Book-1/dp/0316015849', 7.6)");
+
+			// Retrieve all items with a rating of 7.5 or more.
+			ResultSet rs = stmt.executeQuery("select * from item where rating > 7.5");    
+			while(rs.next())
+			{
+				System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getInt(4) + " " + rs.getString(5) + " " + rs.getFloat(6));
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.out.println(ex);
+		}
+
+	}
+	
+	private static Connection connection() {
 
 		Connection con = null;
 
@@ -394,31 +483,33 @@ class jdbcDB2Sample
 			System.out.println("Connection failed\n" + e);
 		}
 
-		try
-		{
-			Statement stmt = con.createStatement();
+	//	try
+	//	{
+	//		Statement stmt = con.createStatement();
 			// Create item table as per spec
-			stmt.executeQuery("create table Item(item_id int not null, genre varchar(20), name varchar(50) not null, age_restriction int, purchase_link varchar(100),rating float not null , primary key (item_id))");
-			System.out.println("Table has been created");
+	//		stmt.executeQuery("create table Item(item_id int not null, genre varchar(20), name varchar(50) not null, age_restriction int, purchase_link varchar(100),rating float not null , primary key (item_id))");
+	//		System.out.println("Table has been created");
 			// Insert Item tuples
-			stmt.executeQuery("insert into Item values(12051, 'Comedy', 'Home Alone', null, null, 9.5)");
-			System.out.println("Inserted new Item");
-			stmt.executeQuery("insert into Item values(49457, 'Horror', 'It Follows', 18, null, 7.1)");
-			System.out.println("Inserted new Item");
-			stmt.executeQuery("insert into Item values(29316, 'Romance', 'Twilight', null, 'https://www.amazon.com/Twilight-Saga-Book-1/dp/0316015849', 7.6)");
+	//		stmt.executeQuery("insert into Item values(12051, 'Comedy', 'Home Alone', null, null, 9.5)");
+	//		System.out.println("Inserted new Item");
+	//		stmt.executeQuery("insert into Item values(49457, 'Horror', 'It Follows', 18, null, 7.1)");
+	//		System.out.println("Inserted new Item");
+	//		stmt.executeQuery("insert into Item values(29316, 'Romance', 'Twilight', null, 'https://www.amazon.com/Twilight-Saga-Book-1/dp/0316015849', 7.6)");
 
 			// Retrieve all items with a rating of 7.5 or more.
-			ResultSet rs = stmt.executeQuery("select * from item where rating > 7.5");   
-			while(rs.next())
-			{
-				System.out.println("The following items have a rating of 7.5 or more:");
-				System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getInt(4) + " " + rs.getString(5) + " " + rs.getFloat(6));
-			}
-		}
-		catch (SQLException ex)
-		{
-			System.out.println(ex);
-		}
+//			ResultSet rs = stmt.executeQuery("select * from item where rating > 7.5");   
+	//		while(rs.next())
+	//		{
+	//			System.out.println("The following items have a rating of 7.5 or more:");
+	//			System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getInt(4) + " " + rs.getString(5) + " " + rs.getFloat(6));
+	//		}
+	//		return con;
+	//	}
+//		catch (SQLException ex)
+	//	{
+		//	System.out.println(ex);
+//		}
+		return con;
 	}
 }
 
