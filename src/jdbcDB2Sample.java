@@ -69,6 +69,10 @@ class jdbcDB2Sample
 				mv.setParentFrame(frame);
 				mv.setParentBrowser(browser);
 				mv.setConnection(con);
+				String[] queries = new String[1];
+				//queries[0] = "start /home/e/e3u9a/cs304/project-final/create_ewiki.sql";
+			//	queries[1] = "start /home/e/e3u9a/cs304/project-final/insert_ewiki.sql";
+				//SendQuery(con, queries, 1);
 				window.asObject().setProperty("mainView", mv);
 
 			}  
@@ -117,7 +121,7 @@ class jdbcDB2Sample
 		private JFrame parent;
 		private Browser browser;
 		private Connection con;
-		
+
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/main.html");
 			final JFrame parent = this.parent;
@@ -166,7 +170,7 @@ class jdbcDB2Sample
 		public void setParentBrowser(Browser browser){
 			this.browser = browser;
 		}
-		
+
 		public void setConnection(Connection con){
 			this.con = con;
 		}
@@ -215,12 +219,12 @@ class jdbcDB2Sample
 		public void setParentBrowser(Browser browser){
 			this.browser = browser;
 		}
-		
+
 		public void setConnection(Connection con) {
 			this.con = con;
 		}
 	}
-	
+
 	public static class ReviewView {
 		private JFrame parent;
 		private Browser browser;
@@ -274,7 +278,7 @@ class jdbcDB2Sample
 		private JFrame parent;
 		private Browser browser;
 		private Connection con;
-		
+
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/item.html");
 			final JFrame parent = this.parent;
@@ -324,29 +328,105 @@ class jdbcDB2Sample
 
 
 	public static class SearchQuery {
-		
+
 		private Connection con;
 		public void search(String filter, String inputText) {
 			String[] queries;
 			System.out.println(filter + " and " + inputText);
-		//	switch(filter) {
-	//		case "All":
-		//		queries = new String[3];
-		//		queries[0] = "DROP VIEW result;";
-		//		queries[1] = "CREATE VIEW result "
-		//				+ "AS SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre "
-		//				+ "FROM Item "
-		//				+ "WHERE CAST(item_id AS TEXT) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’;";
-		//		queries[2] = "SELECT * FROM result;";
-		//		SendQuery(con, queries);
-	//			break;
-	//		}
-			
-			
-//			Connection con = connection();
-			SendQuery(this.con, "");
+			switch(filter) {
+			case "All":
+				queries = new String[3];
+				queries[0] = "DROP VIEW result;";
+				if (inputText.trim() == "") {
+					queries[1] = "CREATE VIEW result AS"
+							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
+							+ "FROM Item;";
+
+				} else {
+					queries[1] = "CREATE VIEW result "
+							+ "AS SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre "
+							+ "FROM Item "
+							+ "WHERE CAST(item_id AS TEXT) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’;";
+				}
+				queries[2] = "SELECT * FROM result;";
+				SendQuery(con, queries, 10);
+				break;
+			case "Item Type":
+				queries = new String[3];
+				queries[0] = "DROP VIEW result;";
+				if (inputText.trim() == "") {
+					queries[1] = "CREATE VIEW result AS"
+							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
+							+ "FROM Item"
+							+ "WHERE type = " + filter + " ;";
+
+				} else {
+					queries[1] = "CREATE VIEW result AS"
+							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
+							+ "FROM Item"
+							+ "WHERE type = " + filter + " AND item_id IN"
+							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS TEXT) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’)";
+				}
+				queries[2] = "SELECT * FROM result;";
+				SendQuery(con, queries, 10);
+				break;
+			case "Genre":
+				queries = new String[3];
+				queries[0] = "DROP VIEW result;";
+				if (inputText.trim() == "") {
+					queries[1] = "CREATE VIEW result AS"
+							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
+							+ "FROM Item"
+							+ "WHERE genre = " + filter + " ;";
+
+				} else {
+					queries[1] = "CREATE VIEW result AS"
+							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
+							+ "FROM Item WHERE genre = " + filter + " AND item_id IN"
+							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS TEXT) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText +"%’);";
+
+
+				}
+				queries[2] = "SELECT * FROM result;";
+				break;
+			case "Age Restriction":
+				queries = new String[3];
+				queries[0] = "DROP VIEW result;";
+				if (inputText.trim() == "") {
+					queries[1] = "CREATE VIEW result AS"
+							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
+							+ "FROM Item"
+							+ "WHERE genre = " + filter + " ;";
+
+				} else {
+					queries[1] = "CREATE VIEW result AS"
+							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
+							+ "FROM Item WHERE age_restriction < " + filter + " AND item_id IN (SELECT item_id FROM Item"
+							+ "WHERE CAST(item_id AS TEXT) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’);";
+
+
+				}
+				queries[2] = "SELECT * FROM result;";
+				break;
+			case "Item":
+				queries = new String[3];
+				queries[0] = "DROP VIEW result;";
+				queries[1] = "CREATE VIEW result AS SELECT DISTINCT review_id, review_text, reviewer_rating, rating_of_review, number_of_rating_of_review, total_points_rating_of_review, review_status, user_id, item_id"
+						+ "FROM Review WHERE item_id IN"
+						+ "(SELECT item_id FROM Item WHERE CAST(item_id AS TEXT) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’);";
+				queries[2] = "SELECT * FROM result;";
+				break;
+			case "User":
+				queries = new String[3];
+				queries[0] = "DROP VIEW result;";
+				queries[1] = "CREATE VIEW result AS "
+						+ "SELECT DISTINCT review_id, review_text, reviewer_rating, rating_of_review, number_of_rating_of_review, total_points_rating_of_review, review_status, user_id, item_id"
+						+ "FROM Review WHERE CAST(user_id AS TEXT) LIKE ‘%" + inputText + "%’ ;";
+				queries[2] = "SELECT * FROM result;";
+				break;
+			}
 		}
-		
+
 		public void searchPredefined(String searchID){
 			System.out.println(searchID);
 			switch(searchID){
@@ -369,78 +449,112 @@ class jdbcDB2Sample
 				lowerRatedReviews();
 				break;
 			default:
-					break;
+				break;
 			}
 		}
-		
+
 		private void highestRatedItems(){
-			
+			String[] queries = new String[3];
+			queries[0] = "SELECT * FROM result ORDER BY item_rating DESC;";
+			SendQuery(con, queries, 10);
 		}
-		
+
 		private void lowerRatedItems(){
-			
+			String[] queries = new String[3];
+			queries[0] = "SELECT * FROM result ORDER BY item_rating;";
+			SendQuery(con, queries, 10);
 		}
-		
+
 		private void mostReviewedItems(){
-			
+			String[] queries = new String[3];
+			queries[0] = "SELECT * FROM result ORDER BY number_of_ratings_of_item_rating;";
+			SendQuery(con, queries, 10);
 		}
-		
+
 		private void currentCountryAvailability(){
-			
+			String[] queries = new String[3];
+			queries[0] = "SELECT * FROM result WHERE wiki_country = User.wiki_country;";
+			SendQuery(con, queries, 10);
 		}
-		
+
+		// TODO: check how many results these should return
 		private void highestRatedReviews(){
-			
+			String[] queries = new String[3];
+			queries[0] = "SELECT * FROM result ORDER BY rating_of_review DESC";
+			SendQuery(con, queries, 10);
 		}
-		
+
 		private void lowerRatedReviews(){
-			
+			String[] queries = new String[3];
+			queries[0] = "SELECT * FROM result ORDER BY rating_of_review";
+			SendQuery(con, queries, 10);
 		}
-		
+
 		public void setConnection(Connection con) {
 			this.con = con;
 		}
 	}
-	
+
 	public static class AdminQuery{
 		private Connection con;
-		
-		public void remove(String ID){
-			System.out.println(ID);
-		}
-		
+
 		public void addUser(String name, String DOB, String email, String country){
-			System.out.println(name + " AND " + DOB + " AND " + email + " AND " + country);
+			String[] queries = new String[1];
+			queries[0] = "INSERT INTO WikiUser VALUES (5, '"+ name + "', '" + DOB + "', '" + email + "', '" + country + "' )";
+			System.out.println(queries[0]);
+			SendQuery(con, queries, 0);
 		}
-		
+
 		public void addItem(String ID, String name, String ageRestriction, String link, String country){
-			System.out.println(ID + " AND " + name + " AND " + ageRestriction + " AND " + link + " AND " + country);
+			String[] queries = new String[1];
+			queries[0] = "INSERT INTO Item VALUES ("+ ID + ", " +  name + ", " + ageRestriction + ", " + link + ", " + country + " )";
+			SendQuery(con, queries, 0);
 		}
-		
+
+		public void removeUser(String ID) {
+			String [] queries = new String[1];
+			queries[0] = "DELETE FROM Item WHERE user_id = " + ID + ";";
+			System.out.println(queries[0]);
+			SendQuery(con, queries, 0);
+		}
+
+		public void removeItem(String ID) {
+			String [] queries = new String[1];
+			queries[0] = "DELETE FROM Item WHERE item_id = " + ID + ";";
+			SendQuery(con, queries, 0);
+		}
+
 		public void setConnection(Connection con){
 			this.con = con;
 		}
 	}
-	
-	private static void SendQuery(Connection con, String query) {
+
+	private static void SendQuery(Connection con, String[] query, int numValues) {
 		try
 		{
 			Statement stmt = con.createStatement();
 			// Create item table as per spec
-	//		stmt.executeQuery("create table Item(item_id int not null, genre varchar(20), name varchar(50) not null, age_restriction int, purchase_link varchar(100),rating float not null , primary key (item_id))");
-	//		System.out.println("Table has been created");
+			//		stmt.executeQuery("create table Item(item_id int not null, genre varchar(20), name varchar(50) not null, age_restriction int, purchase_link varchar(100),rating float not null , primary key (item_id))");
+			//		System.out.println("Table has been created");
 			// Insert Item tuples
-	//		stmt.executeQuery("insert into Item values(12051, 'Comedy', 'Home Alone', null, null, 9.5)");
-	//		System.out.println("Inserted new Item");
-	//		stmt.executeQuery("insert into Item values(49457, 'Horror', 'It Follows', 18, null, 7.1)");
-	//		System.out.println("Inserted new Item");
-	//		stmt.executeQuery("insert into Item values(29316, 'Romance', 'Twilight', null, 'https://www.amazon.com/Twilight-Saga-Book-1/dp/0316015849', 7.6)");
+			//		stmt.executeQuery("insert into Item values(12051, 'Comedy', 'Home Alone', null, null, 9.5)");
+			//		System.out.println("Inserted new Item");
+			//		stmt.executeQuery("insert into Item values(49457, 'Horror', 'It Follows', 18, null, 7.1)");
+			//		System.out.println("Inserted new Item");
+			//		stmt.executeQuery("insert into Item values(29316, 'Romance', 'Twilight', null, 'https://www.amazon.com/Twilight-Saga-Book-1/dp/0316015849', 7.6)");
 
 			// Retrieve all items with a rating of 7.5 or more.
-			ResultSet rs = stmt.executeQuery("select * from item where rating > 7.5");    
-			while(rs.next())
-			{
-				System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getInt(4) + " " + rs.getString(5) + " " + rs.getFloat(6));
+			//ResultSet rs = stmt.executeQuery("select * from item where rating > 7.5");    
+			//	System.out.println("This is " + rs.getArray());
+			for (int x = 0; x < query.length; x++){
+				ResultSet rs = stmt.executeQuery(query[x]);    
+
+			//	while(rs.next())
+			//	{
+			//		for (int i = 1; i < numValues+1; i++){
+			//			System.out.println(rs.getObject(i));
+			//		}
+			//	}
 			}
 		}
 		catch (SQLException ex)
@@ -449,7 +563,7 @@ class jdbcDB2Sample
 		}
 
 	}
-	
+
 	private static Connection connection() {
 
 		Connection con = null;
@@ -483,32 +597,32 @@ class jdbcDB2Sample
 			System.out.println("Connection failed\n" + e);
 		}
 
-	//	try
-	//	{
-	//		Statement stmt = con.createStatement();
-			// Create item table as per spec
-	//		stmt.executeQuery("create table Item(item_id int not null, genre varchar(20), name varchar(50) not null, age_restriction int, purchase_link varchar(100),rating float not null , primary key (item_id))");
-	//		System.out.println("Table has been created");
-			// Insert Item tuples
-	//		stmt.executeQuery("insert into Item values(12051, 'Comedy', 'Home Alone', null, null, 9.5)");
-	//		System.out.println("Inserted new Item");
-	//		stmt.executeQuery("insert into Item values(49457, 'Horror', 'It Follows', 18, null, 7.1)");
-	//		System.out.println("Inserted new Item");
-	//		stmt.executeQuery("insert into Item values(29316, 'Romance', 'Twilight', null, 'https://www.amazon.com/Twilight-Saga-Book-1/dp/0316015849', 7.6)");
+		//	try
+		//	{
+		//		Statement stmt = con.createStatement();
+		// Create item table as per spec
+		//		stmt.executeQuery("create table Item(item_id int not null, genre varchar(20), name varchar(50) not null, age_restriction int, purchase_link varchar(100),rating float not null , primary key (item_id))");
+		//		System.out.println("Table has been created");
+		// Insert Item tuples
+		//		stmt.executeQuery("insert into Item values(12051, 'Comedy', 'Home Alone', null, null, 9.5)");
+		//		System.out.println("Inserted new Item");
+		//		stmt.executeQuery("insert into Item values(49457, 'Horror', 'It Follows', 18, null, 7.1)");
+		//		System.out.println("Inserted new Item");
+		//		stmt.executeQuery("insert into Item values(29316, 'Romance', 'Twilight', null, 'https://www.amazon.com/Twilight-Saga-Book-1/dp/0316015849', 7.6)");
 
-			// Retrieve all items with a rating of 7.5 or more.
-//			ResultSet rs = stmt.executeQuery("select * from item where rating > 7.5");   
-	//		while(rs.next())
-	//		{
-	//			System.out.println("The following items have a rating of 7.5 or more:");
-	//			System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getInt(4) + " " + rs.getString(5) + " " + rs.getFloat(6));
-	//		}
-	//		return con;
-	//	}
-//		catch (SQLException ex)
-	//	{
+		// Retrieve all items with a rating of 7.5 or more.
+		//			ResultSet rs = stmt.executeQuery("select * from item where rating > 7.5");   
+		//		while(rs.next())
+		//		{
+		//			System.out.println("The following items have a rating of 7.5 or more:");
+		//			System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getInt(4) + " " + rs.getString(5) + " " + rs.getFloat(6));
+		//		}
+		//		return con;
+		//	}
+		//		catch (SQLException ex)
+		//	{
 		//	System.out.println(ex);
-//		}
+		//		}
 		return con;
 	}
 }

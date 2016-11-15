@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CPSC 304 Project</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Droid%20Sans" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+
+<style>
+    body {
+        font: 20px Droid Sans, sans-serif;
+        line-height: 1.8;
+        color: #f5f6f7;
+    }
+
+    p {
+        font-size: 32px;
+    }
+
+    .HomeButton {position:absolute; top:5px; left:5px;}
+    .AdminModeButton {position:absolute; top:5px; right:10px;}
+    .scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+</style>
+
+
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+<script>
+function DisplayAdminView() {
+  window.adminView.load();
+}
+function DisplayMainView() {
+  window.mainView.load();
+}
+function Query() {
+    var input = document.getElementById('SearchInput').value;
+    window.searchQuery.search(filter, input);
+}
+
+function QueryPredefined(buttonID) {
+    window.searchQuery.searchPredefined(buttonID);
+}
+</script>
+
+
+<div class="HomeButton" align="left">
+    <button type="button" class="btn btn-sm btn-primary" onClick="DisplayMainView();">
+    <span class="glyphicon glyphicon-menu-left"></span>Home
+    </button>
+</div>
+
+<div class="AdminModeButton">
+    <button type="button" class="btn btn-sm btn-primary" onClick="DisplayAdminView();">
+    Admin Mode<span class="glyphicon glyphicon-menu-right"></span>
+  </button>
+</div>
+<br>
+<p class="text-primary text-center">Shamazon Reviews</p>
+<p class="text-muted text-center"><small>Search Item Reviews!</small></p>
+
+<!--http://stackoverflow.com/questions/19227496/scrollable-menu-with-bootstrap-3-menu-expanding-its-container-when-it-should-n-->
+<!-- Updating dropdown: http://stackoverflow.com/questions/13437446/how-to-display-selected-item-in-bootstrap-button-dropdown-title-->
+<div class="container">
+    <div class="input-group">
+        <div class="input-group-btn">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Item
+            <span class="glyphicon glyphicon-menu-down"></span></button>
+            <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="#">Item</a></li>
+                <li><a href="#">User</a></li>
+            </ul>
+        </div> <!--/btn-group -->
+        <input type="text" id="SearchInput" class="form-control" placeholder="Search by item name or user ID...">
+        <div class="input-group-btn">
+        <button class="btn btn-default" type="button" onClick="Query();">Go!</button>
+        </div>
+</div>
+</div>
+<br>
+<br>
+<p class="text-muted text-center"><small>Don't know where to start? Try these!</small></p>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-sm btn-primary pull-right"  onClick="QueryPredefined($(this).text().trim());">
+                <span class="glyphicon glyphicon glyphicon-thumbs-up"></span> Highest Rated Reviews
+        </div>
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-sm btn-primary pull-left" onClick="QueryPredefined($(this).text().trim());">
+                <span class="glyphicon glyphicon glyphicon-thumbs-down"></span> Lowest Rated Reviews
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-xs-6"></div>
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-sm btn-primary pull-left" onClick="QueryPredefined($(this).text().trim());">
+                <span class="glyphicon glyphicon-stats"></span> Most Reviewed Items
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+var filter = "Item";
+    $(".dropdown-menu li a").click(function(){
+  $(this).parents(".input-group-btn").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+  $(this).parents(".input-group-btn").find('.btn').val($(this).data('value'));
+  filter = $(this).text();
+});
+</script>
+</body>
+</html>

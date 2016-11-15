@@ -41,11 +41,11 @@ function DisplayMainView() {
 }
 function RemoveUser() {
   var UserID = document.getElementById('RemovedUserID').value;
-  window.adminQuery.removeUser(UserID);
+  window.adminQuery.remove(UserID);
 }
 function RemoveItem() {
   var ItemID = document.getElementById('RemovedItemID').value;
-  window.adminQuery.removeItem(ItemID);
+  window.adminQuery.remove(ItemID);
 }
 function AddUser() {
   var name = document.getElementById('UserName').value;
