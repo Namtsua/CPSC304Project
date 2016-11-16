@@ -71,7 +71,7 @@ class jdbcDB2Sample
 				mv.setConnection(con);
 				String[] queries = new String[1];
 				//queries[0] = "start /home/e/e3u9a/cs304/project-final/create_ewiki.sql";
-			//	queries[1] = "start /home/e/e3u9a/cs304/project-final/insert_ewiki.sql";
+				//	queries[1] = "start /home/e/e3u9a/cs304/project-final/insert_ewiki.sql";
 				//SendQuery(con, queries, 1);
 				window.asObject().setProperty("mainView", mv);
 
@@ -336,93 +336,122 @@ class jdbcDB2Sample
 			switch(filter) {
 			case "All":
 				queries = new String[3];
-				queries[0] = "DROP VIEW result;";
+				queries[0] = "DROP VIEW result";
 				if (inputText.trim() == "") {
 					queries[1] = "CREATE VIEW result AS"
-							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
-							+ "FROM Item;";
+							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country, type, genre"
+							+ "FROM Item";
 
 				} else {
-					queries[1] = "CREATE VIEW result "
-							+ "AS SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre "
+					queries[1] = "CREATE VIEW result AS"
+							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item "
-							+ "WHERE CAST(item_id AS TEXT) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’;";
+							+ "WHERE CAST(item_id AS varchar(20)) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’";
 				}
-				queries[2] = "SELECT * FROM result;";
+				queries[2] = "SELECT * FROM result";
 				SendQuery(con, queries, 10);
 				break;
 			case "Item Type":
 				queries = new String[3];
-				queries[0] = "DROP VIEW result;";
+				queries[0] = "DROP VIEW result";
 				if (inputText.trim() == "") {
 					queries[1] = "CREATE VIEW result AS"
-							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
+							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country, type, genre"
 							+ "FROM Item"
-							+ "WHERE type = " + filter + " ;";
+							+ "WHERE type = '" + filter + "' ";
 
 				} else {
 					queries[1] = "CREATE VIEW result AS"
-							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
+							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country, type, genre"
 							+ "FROM Item"
-							+ "WHERE type = " + filter + " AND item_id IN"
-							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS TEXT) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’)";
+							+ "WHERE type = '" + filter + "' AND item_id IN"
+							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS varchar(20)) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’)";
 				}
-				queries[2] = "SELECT * FROM result;";
+				queries[2] = "SELECT * FROM result";
 				SendQuery(con, queries, 10);
 				break;
 			case "Genre":
 				queries = new String[3];
-				queries[0] = "DROP VIEW result;";
+				queries[0] = "DROP VIEW result";
 				if (inputText.trim() == "") {
 					queries[1] = "CREATE VIEW result AS"
-							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
+							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre"
 							+ "FROM Item"
-							+ "WHERE genre = " + filter + " ;";
+							+ "WHERE genre = '" + filter + "' ";
 
 				} else {
 					queries[1] = "CREATE VIEW result AS"
-							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
-							+ "FROM Item WHERE genre = " + filter + " AND item_id IN"
-							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS TEXT) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText +"%’);";
+							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country ,type,genre"
+							+ "FROM Item WHERE genre = '" + filter + "' AND item_id IN"
+							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS varchar(20)) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText +"%’)";
 
 
 				}
-				queries[2] = "SELECT * FROM result;";
+				queries[2] = "SELECT * FROM result";
 				break;
 			case "Age Restriction":
 				queries = new String[3];
-				queries[0] = "DROP VIEW result;";
+				queries[0] = "DROP VIEW result";
 				if (inputText.trim() == "") {
 					queries[1] = "CREATE VIEW result AS"
-							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
+							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,item_plink,wiki_country,type,genre"
 							+ "FROM Item"
-							+ "WHERE genre = " + filter + " ;";
+							+ "WHERE age_restriction <= " + filter + " ";
 
 				} else {
 					queries[1] = "CREATE VIEW result AS"
 							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
-							+ "FROM Item WHERE age_restriction < " + filter + " AND item_id IN (SELECT item_id FROM Item"
-							+ "WHERE CAST(item_id AS TEXT) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’);";
+							+ "FROM Item WHERE age_restriction <= " + filter + " AND item_id IN (SELECT item_id FROM Item"
+							+ "WHERE CAST(item_id AS varcahr(20)) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’)";
 
 
 				}
-				queries[2] = "SELECT * FROM result;";
+				queries[2] = "SELECT * FROM result";
+				break;
+			case "Rating":
+				queries = new String[3];
+				queries[0] = "DROP VIEW result";
+				if (inputText.trim() == "") {
+					queries[1] = "CREATE VIEW result AS"
+							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre"
+							+ "FROM Item WHERE item_rating >= " + filter;
+				} else {
+					queries[1] = "CREATE VIEW result AS"
+							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre"
+							+ "FROM Item WHERE item_rating >= " + filter + " AND item_id IN"
+							+ "(SELECT item_id FROM Item"
+							+ " WHERE CAST(item_id AS varchar(20)) LIKE '%" + inputText + "%' OR item_name LIKE '%" + inputText + "%')";
+
+				}
+				queries[2] = "Select * FROM result";
 				break;
 			case "Item":
 				queries = new String[3];
-				queries[0] = "DROP VIEW result;";
-				queries[1] = "CREATE VIEW result AS SELECT DISTINCT review_id, review_text, reviewer_rating, rating_of_review, number_of_rating_of_review, total_points_rating_of_review, review_status, user_id, item_id"
-						+ "FROM Review WHERE item_id IN"
-						+ "(SELECT item_id FROM Item WHERE CAST(item_id AS TEXT) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’);";
-				queries[2] = "SELECT * FROM result;";
+				queries[0] = "DROP VIEW result";
+				if (inputText.trim() == "") {
+					queries[1] = "CREATE VIEW result AS SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id"
+							+ "FROM Review";
+
+				} else {
+					queries[1] = "CREATE VIEW result AS SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id"
+							+ "FROM Review WHERE item_id IN"
+							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS varchar(20)) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’)";
+				}
+				queries[2] = "SELECT * FROM result";
 				break;
 			case "User":
 				queries = new String[3];
-				queries[0] = "DROP VIEW result;";
-				queries[1] = "CREATE VIEW result AS "
-						+ "SELECT DISTINCT review_id, review_text, reviewer_rating, rating_of_review, number_of_rating_of_review, total_points_rating_of_review, review_status, user_id, item_id"
-						+ "FROM Review WHERE CAST(user_id AS TEXT) LIKE ‘%" + inputText + "%’ ;";
-				queries[2] = "SELECT * FROM result;";
+				queries[0] = "DROP VIEW result";
+				if (inputText.trim() == "") {
+					queries[1] = "CREATE VIEW result AS SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id"
+							+ "FROM Review";
+
+				} else {
+					queries[1] = "CREATE VIEW result AS "
+							+ "SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id"
+							+ "FROM Review WHERE CAST(user_id AS varchar(20)) LIKE ‘%" + inputText + "%’ ";
+				}
+				queries[2] = "SELECT * FROM result";
 				break;
 			}
 		}
@@ -502,7 +531,7 @@ class jdbcDB2Sample
 			String[] queries = new String[1];
 			queries[0] = "INSERT INTO WikiUser VALUES (5, '"+ name + "', '" + DOB + "', '" + email + "', '" + country + "' )";
 			System.out.println(queries[0]);
-			SendQuery(con, queries, 0);
+			SendQuery(con, queries, 4);
 		}
 
 		public void addItem(String ID, String name, String ageRestriction, String link, String country){
@@ -547,14 +576,14 @@ class jdbcDB2Sample
 			//ResultSet rs = stmt.executeQuery("select * from item where rating > 7.5");    
 			//	System.out.println("This is " + rs.getArray());
 			for (int x = 0; x < query.length; x++){
-				ResultSet rs = stmt.executeQuery(query[x]);    
+				ResultSet rs = stmt.executeQuery("SELECT * FROM WikiUser");    
 
-			//	while(rs.next())
-			//	{
-			//		for (int i = 1; i < numValues+1; i++){
-			//			System.out.println(rs.getObject(i));
-			//		}
-			//	}
+				while(rs.next())
+				{
+					for (int i = 1; i < numValues+1; i++){
+						System.out.println(rs.getObject(i));
+					}
+				}
 			}
 		}
 		catch (SQLException ex)
