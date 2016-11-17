@@ -22,7 +22,7 @@
         font-size: 32px;
     }
 
-    .LogOutButton {position:absolute; top:5px; left:5px;}
+    .HomeButton {position:absolute; top:5px; left:5px;}
     .AdminModeButton {position:absolute; top:5px; right:10px;}
     .scrollable-menu {
     height: auto;
@@ -44,8 +44,7 @@ function DisplayMainView() {
 }
 function Query() {
     var input = document.getElementById('SearchInput').value;
-   // window.searchQuery.search(filter, input);
-    window.resultView.load(filter, input);
+    window.searchQuery.search(filter, input);
 }
 
 function QueryPredefined(buttonID) {
@@ -53,59 +52,35 @@ function QueryPredefined(buttonID) {
 }
 </script>
 
-<div class="LogOutButton" align="left">
-    <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayMainView();">
+
+<div class="HomeButton" align="left">
+    <button type="button" class="btn btn-sm btn-primary" onClick="DisplayMainView();">
     <span class="glyphicon glyphicon-menu-left"></span>Home
     </button>
 </div>
 
 <div class="AdminModeButton">
-    <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayAdminView();">
+    <button type="button" class="btn btn-sm btn-primary" onClick="DisplayAdminView();">
     Admin Mode<span class="glyphicon glyphicon-menu-right"></span>
   </button>
 </div>
 <br>
-<p class="text-primary text-center">Shamazon Items</p>
-<p class="text-muted text-center"><small>Search for the Items That You Want!</small></p>
+<p class="text-primary text-center">Shamazon Reviews</p>
+<p class="text-muted text-center"><small>Search Item Reviews!</small></p>
 
 <!--http://stackoverflow.com/questions/19227496/scrollable-menu-with-bootstrap-3-menu-expanding-its-container-when-it-should-n-->
 <!-- Updating dropdown: http://stackoverflow.com/questions/13437446/how-to-display-selected-item-in-bootstrap-button-dropdown-title-->
 <div class="container">
     <div class="input-group">
         <div class="input-group-btn">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">All
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Item
             <span class="glyphicon glyphicon-menu-down"></span></button>
             <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu1">
-                <li><a href="#">All</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Item Type</li>
-                <li><a href="#">Book</a></li>
-                <li><a href="#">Film</a></li>
-                <li><a href="#">Audio</a></li>
-                <li><a href="#">Video Game</a></li>
-                <li><a href="#">TV Series</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Genre</li>
-                <li><a href="#">Comedy</a></li>
-                <li><a href="#">Horror</a></li>
-                <li><a href="#">Romance</a></li>
-                <li><a href="#">Adventure</a></li>
-                <li><a href="#">Action</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Age</li>
-                <li><a href="#">Under 6</a></li>
-                <li><a href="#">7-17</a></li>
-                <li><a href="#">18+</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Rating</li>
-                <li><a href="#">1 Star</a></li>
-                <li><a href="#">2 Stars</a></li>
-                <li><a href="#">3 Stars</a></li>
-                <li><a href="#">4 Stars</a></li>
-                <li><a href="#">5 Stars</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">User</a></li>
             </ul>
         </div> <!--/btn-group -->
-        <input id= "SearchInput" type="text" class="form-control" placeholder="Search for...">
+        <input type="text" id="SearchInput" class="form-control" placeholder="Search by item name or user ID...">
         <div class="input-group-btn">
         <button class="btn btn-default" type="button" onClick="Query();">Go!</button>
         </div>
@@ -118,35 +93,32 @@ function QueryPredefined(buttonID) {
 <div class="container">
     <div class="row">
         <div class="col-xs-6">
-            <button type="button" class="btn btn-sm btn-primary pull-right" onClick="QueryPredefined($(this).text().trim());">
-                <span class="glyphicon glyphicon glyphicon-thumbs-up"></span> Highest Rated Items
+            <button type="button" class="btn btn-sm btn-primary pull-right"  onClick="QueryPredefined($(this).text().trim());">
+                <span class="glyphicon glyphicon glyphicon-thumbs-up"></span> Highest Rated Reviews
         </div>
         <div class="col-xs-6">
             <button type="button" class="btn btn-sm btn-primary pull-left" onClick="QueryPredefined($(this).text().trim());">
-                <span class="glyphicon glyphicon glyphicon-thumbs-down"></span> Lowest Rated Items
+                <span class="glyphicon glyphicon glyphicon-thumbs-down"></span> Lowest Rated Reviews
         </div>
     </div>
     <br>
     <div class="row">
-        <div class="col-xs-6">
-            <button type="button" class="btn btn-sm btn-primary pull-right" onClick="QueryPredefined($(this).text().trim());">
-                <span class="glyphicon glyphicon-stats"></span> Most Reviewed Items
-        </div>
+        <div class="col-xs-6"></div>
         <div class="col-xs-6">
             <button type="button" class="btn btn-sm btn-primary pull-left" onClick="QueryPredefined($(this).text().trim());">
-                <span class="glyphicon glyphicon glyphicon-globe"></span> Items Available In Your Country
+                <span class="glyphicon glyphicon-stats"></span> Most Reviewed Items
         </div>
     </div>
 </div>
 
 
 <script>
-var filter = "All";
+
+var filter = "Item";
     $(".dropdown-menu li a").click(function(){
   $(this).parents(".input-group-btn").find('.btn').html($(this).text() + ' <span class="caret"></span>');
   $(this).parents(".input-group-btn").find('.btn').val($(this).data('value'));
   filter = $(this).text();
-  
 });
 </script>
 </body>
