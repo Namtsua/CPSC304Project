@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CPSC 304 Project</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Droid%20Sans" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+
+<style>
+    body {
+        font: 20px Droid Sans, sans-serif;
+        line-height: 1.8;
+        color: #f5f6f7;
+    }
+
+    p {
+        font-size: 32px;
+    }
+
+    h2 {
+        line-height: 70%;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    .LogOutButton {position:absolute; top:5px; left:5px;}
+    .AdminModeButton {position:absolute; top:5px; right:10px;}
+    .scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+
+</style>
+
+
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+<script>
+var tiger = "roar";
+function DisplayAdminView() {
+  window.adminView.load();
+}
+function DisplayMainView() {
+  window.mainView.load();
+}
+function Query() {
+    var input = document.getElementById('SearchInput').value;
+    window.searchQuery.search(filter, input);
+}
+
+function QueryPredefined(buttonID) {
+    window.searchQuery.searchPredefined(buttonID);
+}
+</script>
+
+<div class="LogOutButton" align="left">
+    <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayMainView();">
+    <span class="glyphicon glyphicon-menu-left"></span>Home
+    </button>
+</div>
+
+<div class="AdminModeButton">
+    <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayAdminView();">
+    Admin Mode<span class="glyphicon glyphicon-menu-right"></span>
+  </button>
+</div>
+<br>
+<p class="text-primary text-left">Results</p>
+<br>
+<div class="container" id="ResultList">
+    <p id = "result0"></p>
+</div>
+
+<br>
+
+<div class="container">
+  <form>
+    <h3 class="text-primary">Write A Review:</h3>
+    <div class = "form-inline">
+    <div class="form-group">
+      <label for="inputEmail3" class="col-xs-4 col-form-label text-muted">Item ID</label>
+      <div class="col-xs-6">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="Item ID">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputEmail3" class="col-xs-4 col-form-label text-muted">Rating</label>
+      <div class="col-xs-6">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="Rating">
+      </div>
+    </div>
+    </div>
+    <div class="form-group">
+        <label for="ReviewComment" class="col-xs-4 text-muted">Your Review:</label>
+        <textarea id= "ReviewComment" type="text" class="form-control" rows="5" placeholder="Write a review..."></textarea>
+        <div class="form-group-btn">
+        <button class="btn btn-default" type="button" onClick="Query();">Go!</button>
+        </div>
+  </form>
+</div>
+
+</div>
+
+
+
+
+<script>
+var filter = "All";
+    $(".dropdown-menu li a").click(function(){
+  $(this).parents(".input-group-btn").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+  $(this).parents(".input-group-btn").find('.btn').val($(this).data('value'));
+  filter = $(this).text();
+  
+});
+
+    $(window).load(function() {
+
+      for (var i = 0 ; i < (window.result).length(); i++){
+      $('#result'+i).html("<div class='container'><p class ='text-muted'>" + window.result[i][0] + " <small class='text-primary'> " + window.result[i][1] + ": Item rating is " + window.result[i][3] + "</small></p><h2 class='text-primary'><small>This item is a " + window.result[i][7] + " and " + window.result[i][6] + "</small></h2><h2 class='text-primary'><small>For ages " + window.result[i][2] + " and up</small></h2><h2 class='text-primary'><small>Available in " + window.result[i][5] + " at: " + window.result[i][4] + "</small></h2></div>");
+      $('#ResultList').append('<p id="result'+(i+1)+'"></p>');
+      }   
+    }); 
+
+</script>
+</body>
+</html>

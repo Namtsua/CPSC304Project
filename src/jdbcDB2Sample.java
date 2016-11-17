@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.concurrent.atomic.AtomicReference;
-
+import java.util.concurrent.TimeUnit;
 class jdbcDB2Sample 
 {
 	public static void main(String argv[]) 
@@ -56,7 +56,7 @@ class jdbcDB2Sample
 		final Connection con = connection();
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.add(browserView, BorderLayout.CENTER);
-		frame.setSize(700, 500);
+		frame.setSize(900, 700);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
@@ -304,9 +304,14 @@ class jdbcDB2Sample
 					mv.setParentBrowser(browser);
 					SearchQuery sq = new SearchQuery();
 					sq.setConnection(con);
+					ResultView rv = new ResultView();
+					rv.setConnection(con);
+					rv.setParentBrowser(browser);
+					rv.setParentFrame(parent);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);					
 					window.asObject().setProperty("searchQuery", sq);
+					window.asObject().setProperty("resultView", rv);
 				}  
 			});
 
@@ -326,11 +331,70 @@ class jdbcDB2Sample
 		}
 	}
 
+	public static class ResultView {
+		private JFrame parent;
+		private Browser browser;
+		private Connection con;
+		private String[][] queryResult;
+
+		public void load(String filter, String inputText) {
+			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/result.html");
+			final JFrame parent = this.parent;
+			final Connection con = this.con;
+			parent.setResizable(false);
+			parent.setLocationRelativeTo(null);
+			parent.setVisible(true);
+			SearchQuery sq = new SearchQuery();
+			sq.setConnection(con);
+			final String[][] result = sq.search(filter, inputText);
+			this.queryResult = result;
+			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
+			// Embed Browser Swing component into the dialog.
+			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
+			//	this.parent.setSize(700, 500);	
+
+			this.browser.addScriptContextListener(new ScriptContextAdapter() {
+				@Override
+				public void onScriptContextCreated(ScriptContextEvent event) {
+					Browser browser = event.getBrowser();
+					JSValue window = browser.executeJavaScriptAndReturnValue("window");
+					AdminView av = new AdminView();
+					av.setParentFrame(parent);
+					av.setParentBrowser(browser);
+					MainView mv = new MainView();
+					mv.setParentFrame(parent);
+					mv.setParentBrowser(browser);
+					window.asObject().setProperty("adminView", av);
+					window.asObject().setProperty("mainView", mv);	
+					window.asObject().setProperty("result", result);
+				}  
+			});
+
+			//connection();
+		}
+
+		public void setParentFrame(JFrame parent){
+			this.parent = parent;
+		}
+
+		public void setParentBrowser(Browser browser){
+			this.browser = browser;
+		}
+
+		public void setConnection(Connection con) {
+			this.con = con;
+		}
+
+		public String[][] getResult(){
+			return this.queryResult;
+		}
+
+	}
 
 	public static class SearchQuery {
 
 		private Connection con;
-		public void search(String filter, String inputText) {
+		public String[][] search(String filter, String inputText) {
 			String[] queries;
 			System.out.println(filter + " and " + inputText);
 			switch(filter) {
@@ -338,19 +402,17 @@ class jdbcDB2Sample
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
 				if (inputText.trim() == "") {
-					queries[1] = "CREATE VIEW result AS"
-							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country, type, genre"
+					queries[1] = "CREATE VIEW result AS "
+							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item";
-
 				} else {
-					queries[1] = "CREATE VIEW result AS"
+					queries[1] = "CREATE VIEW result AS "
 							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item "
-							+ "WHERE CAST(item_id AS varchar(20)) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’";
+							+ "WHERE CAST(item_id AS varchar(20)) LIKE '%" + inputText + "%' OR item_name LIKE '%" + inputText + "%'";
 				}
 				queries[2] = "SELECT * FROM result";
-				SendQuery(con, queries, 10);
-				break;
+				return SendQuery(con, queries, 9);
 			case "Item Type":
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
@@ -368,8 +430,7 @@ class jdbcDB2Sample
 							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS varchar(20)) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’)";
 				}
 				queries[2] = "SELECT * FROM result";
-				SendQuery(con, queries, 10);
-				break;
+				return SendQuery(con, queries, 8);
 			case "Genre":
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
@@ -388,26 +449,26 @@ class jdbcDB2Sample
 
 				}
 				queries[2] = "SELECT * FROM result";
-				break;
+				return SendQuery(con, queries, 8);
 			case "Age Restriction":
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
 				if (inputText.trim() == "") {
 					queries[1] = "CREATE VIEW result AS"
-							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,item_plink,wiki_country,type,genre"
+							+ "SELECT item_id, item_name, age_restriction,item_rating,item_plink,wiki_country,type,genre"
 							+ "FROM Item"
 							+ "WHERE age_restriction <= " + filter + " ";
 
 				} else {
 					queries[1] = "CREATE VIEW result AS"
-							+ "SELECT DISTINCT item_id, item_name, age_restriction,item_rating,number_of_ratings_of_item,total_points_item_rating,item_plink,wiki_country,type,genre"
+							+ "SELECT item_id, item_name, age_restriction,item_rating,item_plink,wiki_country,type,genre"
 							+ "FROM Item WHERE age_restriction <= " + filter + " AND item_id IN (SELECT item_id FROM Item"
 							+ "WHERE CAST(item_id AS varcahr(20)) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’)";
 
 
 				}
 				queries[2] = "SELECT * FROM result";
-				break;
+				return SendQuery(con, queries, 8);
 			case "Rating":
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
@@ -424,7 +485,7 @@ class jdbcDB2Sample
 
 				}
 				queries[2] = "Select * FROM result";
-				break;
+				return SendQuery(con, queries, 8);
 			case "Item":
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
@@ -438,7 +499,7 @@ class jdbcDB2Sample
 							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS varchar(20)) LIKE ‘%" + inputText + "%’ OR item_name LIKE ‘%" + inputText + "%’)";
 				}
 				queries[2] = "SELECT * FROM result";
-				break;
+				return SendQuery(con, queries, 7);
 			case "User":
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
@@ -452,7 +513,9 @@ class jdbcDB2Sample
 							+ "FROM Review WHERE CAST(user_id AS varchar(20)) LIKE ‘%" + inputText + "%’ ";
 				}
 				queries[2] = "SELECT * FROM result";
-				break;
+				return SendQuery(con, queries, 7);
+			default:
+				return null;
 			}
 		}
 
@@ -558,10 +621,12 @@ class jdbcDB2Sample
 		}
 	}
 
-	private static void SendQuery(Connection con, String[] query, int numValues) {
+	private static String[][] SendQuery(Connection con, String[] query, int numValues) {
 		try
 		{
 			Statement stmt = con.createStatement();
+
+			//	return innerResult;
 			// Create item table as per spec
 			//		stmt.executeQuery("create table Item(item_id int not null, genre varchar(20), name varchar(50) not null, age_restriction int, purchase_link varchar(100),rating float not null , primary key (item_id))");
 			//		System.out.println("Table has been created");
@@ -575,21 +640,48 @@ class jdbcDB2Sample
 			// Retrieve all items with a rating of 7.5 or more.
 			//ResultSet rs = stmt.executeQuery("select * from item where rating > 7.5");    
 			//	System.out.println("This is " + rs.getArray());
+			String[] values = new String[numValues];
+			String[][] results = new String[20][];
+			int iterationCounter = 0;
 			for (int x = 0; x < query.length; x++){
-				ResultSet rs = stmt.executeQuery("SELECT * FROM WikiUser");    
-
+				System.out.println(query[x]);
+				ResultSet rs = stmt.executeQuery(query[x]);
+				if (query[x].startsWith("DROP") || query[x].startsWith("CREATE")){
+					continue;
+				}	
 				while(rs.next())
 				{
-					for (int i = 1; i < numValues+1; i++){
-						System.out.println(rs.getObject(i));
+					System.out.println(query[x]);
+					for (int i = 1; i < numValues; i++){
+						if (rs.getObject(i) != null)
+							values[i-1] = rs.getObject(i).toString();
+						else
+							values[i-1] = null;
 					}
+					System.out.println(values[6]);
+					results[iterationCounter] = values;
+					values = new String[numValues];
+					iterationCounter++;
 				}
 			}
+			int nullCounter = 0;
+			for (int j = 0; j < 20; j++){
+				if (results[j] == null)
+					nullCounter++;
+			}
+
+			String[][] parsedResults = new String[20-nullCounter][];
+			for (int k = 0; k < parsedResults.length; k++){
+				parsedResults[k] = results[k];
+			}
+			return parsedResults;
 		}
 		catch (SQLException ex)
 		{
 			System.out.println(ex);
+
 		}
+		return null;
 
 	}
 

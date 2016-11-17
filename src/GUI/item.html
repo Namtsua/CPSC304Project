@@ -44,7 +44,8 @@ function DisplayMainView() {
 }
 function Query() {
     var input = document.getElementById('SearchInput').value;
-    window.searchQuery.search(filter, input);
+   // window.searchQuery.search(filter, input);
+    window.resultView.load(filter, input);
 }
 
 function QueryPredefined(buttonID) {
