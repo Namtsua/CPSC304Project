@@ -250,14 +250,14 @@ class jdbcDB2Sample
 					mv.setParentBrowser(browser);
 					SearchQuery sq = new SearchQuery();
 					sq.setConnection(con);
-					ResultView rv = new ResultView();
-					rv.setConnection(con);
-					rv.setParentBrowser(browser);
-					rv.setParentFrame(parent);
+					ReviewResultView rrv = new ReviewResultView();
+					rrv.setConnection(con);
+					rrv.setParentBrowser(browser);
+					rrv.setParentFrame(parent);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);					
 					window.asObject().setProperty("searchQuery", sq);
-					window.asObject().setProperty("resultView", rv);;
+					window.asObject().setProperty("reviewResultView", rrv);;
 				}  
 			});
 
@@ -310,14 +310,14 @@ class jdbcDB2Sample
 					mv.setParentBrowser(browser);
 					SearchQuery sq = new SearchQuery();
 					sq.setConnection(con);
-					ResultView rv = new ResultView();
-					rv.setConnection(con);
-					rv.setParentBrowser(browser); 
-					rv.setParentFrame(parent);
+					ItemResultView irv = new ItemResultView();
+					irv.setConnection(con);
+					irv.setParentBrowser(browser); 
+					irv.setParentFrame(parent);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);					
 					window.asObject().setProperty("searchQuery", sq);
-					window.asObject().setProperty("resultView", rv);
+					window.asObject().setProperty("itemResultView", irv);
 				}  
 			});
 
@@ -337,14 +337,14 @@ class jdbcDB2Sample
 		}
 	}
 
-	public static class ResultView {
+	public static class ItemResultView {
 		private JFrame parent;
 		private Browser browser;
 		private Connection con;
 		private String[][] queryResult;
 
 		public void load(String filter, String inputText) {
-			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/result.html");
+			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/itemresult.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
 			parent.setResizable(false);
@@ -399,6 +399,71 @@ class jdbcDB2Sample
 
 	}
 
+	public static class ReviewResultView {
+		private JFrame parent;
+		private Browser browser;
+		private Connection con;
+		private String[][] queryResult;
+
+		public void load(String filter, String inputText) {
+			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/reviewresult.html");
+			final JFrame parent = this.parent;
+			final Connection con = this.con;
+			parent.setResizable(false);
+			parent.setLocationRelativeTo(null);
+			parent.setVisible(true);
+			SearchQuery sq = new SearchQuery();
+			sq.setConnection(con);
+			final String[][] result = sq.search(filter, inputText);
+			this.queryResult = result;
+			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
+			// Embed Browser Swing component into the dialog.
+			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
+			//	this.parent.setSize(700, 500);	
+
+			this.browser.addScriptContextListener(new ScriptContextAdapter() {
+				@Override
+				public void onScriptContextCreated(ScriptContextEvent event) {
+					Browser browser = event.getBrowser();
+					JSValue window = browser.executeJavaScriptAndReturnValue("window");
+					AdminView av = new AdminView();
+					av.setParentFrame(parent);
+					av.setParentBrowser(browser);
+					av.setConnection(con);
+					MainView mv = new MainView();
+					mv.setParentFrame(parent);
+					mv.setParentBrowser(browser);
+					mv.setConnection(con);
+					window.asObject().setProperty("adminView", av);
+					window.asObject().setProperty("mainView", mv);	
+					window.asObject().setProperty("result", result);
+				}  
+			});
+
+			//connection();
+		}
+
+		public void setParentFrame(JFrame parent){
+			this.parent = parent;
+		}
+
+		public void setParentBrowser(Browser browser){
+			this.browser = browser;
+		}
+
+		public void setConnection(Connection con) {
+			this.con = con;
+		}
+
+		public String[][] getResult(){
+			return this.queryResult;
+		}
+
+	}
+	
+	
+	
+	
 	public static class SearchQuery {
 
 		private Connection con;
