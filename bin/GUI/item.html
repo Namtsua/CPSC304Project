@@ -59,7 +59,7 @@ function QueryPredefined(buttonID) {
     </button>
 </div>
 
-<div class="AdminModeButton">
+<div class="AdminModeButton" id="AdminButton">
     <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayAdminView();">
     Admin Mode<span class="glyphicon glyphicon-menu-right"></span>
   </button>
@@ -148,6 +148,12 @@ var filter = "All";
   filter = $(this).text();
   
 });
+
+    $(window).load(function() {
+      // If not in admin mode, don't display Admin Button
+      if (!window.isAdmin)
+            $('#AdminButton').hide();
+    }); 
 </script>
 </body>
 </html>

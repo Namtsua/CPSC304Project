@@ -69,7 +69,7 @@ function QueryPredefined(buttonID) {
     </button>
 </div>
 
-<div class="AdminModeButton">
+<div class="AdminModeButton" id="AdminButton">
     <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayAdminView();">
     Admin Mode<span class="glyphicon glyphicon-menu-right"></span>
   </button>
@@ -118,6 +118,9 @@ var filter = "All";
 });
 
     $(window).load(function() {
+      // If not in admin mode, don't display Admin Button
+      if (!window.isAdmin)
+            $('#AdminButton').hide();
         // MAKE VIEW FOR REVIEW RESULTS?
       for (var i = 0 ; i < (window.result).length(); i++){
       $('#result'+i).html("<div class='container'><p class ='text-primary'>Review for " + window.result[i][6] + " by " +  window.result[i][5] + ": " + window.result[i][2] + "<small class='text-primary'> " + window.result[i][1] + "</small></p>");
