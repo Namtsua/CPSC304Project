@@ -44,8 +44,10 @@ function DisplayMainView() {
 }
 function Query() {
     var input = document.getElementById('SearchInput').value;
-    window.searchQuery.search(filter, input);
+   // window.searchQuery.search(filter, input);
+    window.reviewResultView.load(filter, input);
 }
+
 
 function QueryPredefined(buttonID) {
     window.searchQuery.searchPredefined(buttonID);

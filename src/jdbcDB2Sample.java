@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.sql.*; 
 
 import com.teamdev.jxbrowser.chromium.Browser;
@@ -17,43 +18,17 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.TimeUnit;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 class jdbcDB2Sample 
 {
 	public static void main(String argv[]) 
 	{
-
-
-		//        browser.addLoadListener(new LoadAdapter() {
-		//            @Override
-		//            public void onFinishLoadingFrame(FinishLoadingEvent event) {
-		//                if (event.isMainFrame()) {
-		//                    JSValue value = browser.executeJavaScriptAndReturnValue("window");
-		//                    this.helloWorld();
-		//                }
-		//            }
-		//        });
-		//    JSValue window = browser.executeJavaScriptAndReturnValue("window");
-		//   window.asObject().setProperty("frame", frame);
-		//    window.asObject().setProperty("userView", new UserView());
-
-		// 	connectToDB.addActionListener(new ActionListener() {
-		// 		@Override
-		// 		public void actionPerformed(ActionEvent e) {
-		// 			System.out.println("hello world");
-		// 		}
-		// 		
-		// 	});	
-		//    	JPanel contentPane = new JPanel();
-		////    	contentPane.add(connectToDB);
-		//    	 frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		//         frame.add(contentPane, BorderLayout.CENTER);
-		//         frame.setSize(300, 75);
-		//         frame.setLocationRelativeTo(null);
-		//         frame.setVisible(true);
 		final Browser browser = new Browser();
 		BrowserView browserView = new BrowserView(browser);
 		final JFrame frame = new JFrame("Shamazon");
 		final Connection con = connection();
+		final boolean isAdmin = false;
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.add(browserView, BorderLayout.CENTER);
 		frame.setSize(900, 700);
@@ -83,84 +58,32 @@ class jdbcDB2Sample
 	public static class LoginView {
 		private JFrame parent;
 		private Browser browser;
+		private Connection con;
+		private boolean isAdmin;
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/index.html");
 			final JFrame parent = this.parent;
-			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
-			// Embed Browser Swing component into the dialog.
-			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
-			//	this.parent.setSize(700, 500);	
+			final Connection con = this.con;
+			final Browser browser = this.browser;
+			final boolean isAdmin = this.isAdmin;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
 
 			this.browser.addScriptContextListener(new ScriptContextAdapter() {
-				@Override
+				@Override 
 				public void onScriptContextCreated(ScriptContextEvent event) {
 					Browser browser = event.getBrowser();
 					JSValue window = browser.executeJavaScriptAndReturnValue("window");
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
+					mv.setConnection(con);
+					mv.setAdminMode(isAdmin);
+					//TODO: Maybe set admin mode here?
 					window.asObject().setProperty("mainView", mv);					
 				}  
 			});
-			//connection();
-		}
-
-		public void setParentFrame(JFrame parent){
-			this.parent = parent;
-		}
-
-		public void setParentBrowser(Browser browser){
-			this.browser = browser;
-		}
-	}
-
-	public static class MainView {
-		private JFrame parent;
-		private Browser browser;
-		private Connection con;
-
-		public void load() {
-			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/main.html");
-			final JFrame parent = this.parent;
-			final Connection con = this.con;
-			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
-			// Embed Browser Swing component into the dialog.
-			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
-			//	this.parent.setSize(700, 500);	
-			parent.setResizable(false);
-			parent.setLocationRelativeTo(null);
-			parent.setVisible(true);
-
-			this.browser.addScriptContextListener(new ScriptContextAdapter() {
-				@Override
-				public void onScriptContextCreated(ScriptContextEvent event) {
-					Browser browser = event.getBrowser();
-					JSValue window = browser.executeJavaScriptAndReturnValue("window");
-					LoginView lv = new LoginView();
-					lv.setParentFrame(parent);
-					lv.setParentBrowser(browser);
-					AdminView av = new AdminView();
-					av.setParentFrame(parent);
-					av.setParentBrowser(browser);
-					av.setConnection(con);
-					ItemView iv = new ItemView();
-					iv.setParentFrame(parent);
-					iv.setParentBrowser(browser);
-					iv.setConnection(con);
-					ReviewView rv = new ReviewView();
-					rv.setParentFrame(parent);
-					rv.setParentBrowser(browser);
-					rv.setConnection(con);
-					window.asObject().setProperty("loginView", lv);
-					window.asObject().setProperty("adminView", av);
-					window.asObject().setProperty("itemView", iv);
-					window.asObject().setProperty("reviewView", rv);					
-				}  
-			});
-			//connection();
 		}
 
 		public void setParentFrame(JFrame parent){
@@ -174,16 +97,145 @@ class jdbcDB2Sample
 		public void setConnection(Connection con){
 			this.con = con;
 		}
+
+		public void setAdminMode(boolean isAdmin) {
+			this.isAdmin = isAdmin;
+
+		}
+	}
+
+	public static class MainView {
+		private JFrame parent;
+		private Browser browser;
+		private Connection con;
+		private boolean isAdmin;
+
+		public void load() {
+			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/main.html");
+			final JFrame parent = this.parent;
+			final Connection con = this.con;
+			final boolean isAdmin = this.isAdmin;
+			System.out.println("IS ADMIN MODE ON? " + isAdmin);
+			parent.setResizable(false);
+			parent.setLocationRelativeTo(null);
+			parent.setVisible(true);
+
+			this.browser.addScriptContextListener(new ScriptContextAdapter() {
+				@Override
+				public void onScriptContextCreated(ScriptContextEvent event) {
+					Browser browser = event.getBrowser();
+					JSValue window = browser.executeJavaScriptAndReturnValue("window");
+					LoginView lv = new LoginView();
+					lv.setParentFrame(parent);
+					lv.setParentBrowser(browser);
+					lv.setConnection(con);
+					lv.setAdminMode(false);
+					AdminView av = new AdminView();
+					av.setParentFrame(parent);
+					av.setParentBrowser(browser);
+					av.setConnection(con);
+					av.setAdminMode(isAdmin);
+					ItemView iv = new ItemView();
+					iv.setParentFrame(parent);
+					iv.setParentBrowser(browser);
+					iv.setConnection(con);
+					iv.setAdminMode(isAdmin);
+					ReviewView rv = new ReviewView();
+					rv.setParentFrame(parent);
+					rv.setParentBrowser(browser);
+					rv.setConnection(con);
+					rv.setAdminMode(isAdmin);
+					window.asObject().setProperty("loginView", lv);
+					window.asObject().setProperty("adminView", av);
+					window.asObject().setProperty("itemView", iv);
+					window.asObject().setProperty("reviewView", rv);	
+					window.asObject().setProperty("isAdmin", isAdmin);
+				}  
+			});
+		}
+
+		public boolean login(String username, String password){
+			//TODO: Hash password
+			MessageDigest md;
+			try {
+
+				md = MessageDigest.getInstance("MD5");
+				byte[] thedigest = md.digest(password.getBytes());
+				BigInteger bigInt = new BigInteger(1,thedigest);
+				String hashtext = bigInt.toString(16);
+				// Now we need to zero pad it if you actually want the full 32 chars.
+				while(hashtext.length() < 32 ){
+					hashtext = "0"+hashtext;
+				}
+				String[] queries = new String[1];
+				queries[0] = "SELECT wiki_user_email FROM WikiUser WHERE wiki_user_email = '" + username + "'";
+				String[][] result = SendQuery(this.con, queries, 2);
+				System.out.println("Just retrieved this email " + result[0][0]);
+				// No result
+				if (result[0][0] == null)
+					return false;
+				else{
+					System.out.println("Trying to get password");
+					queries[0] = "SELECT wiki_user_password FROM WikiUser WHERE wiki_user_email = '" + username + "'";
+					result = SendQuery(this.con, queries, 2);
+					System.out.println("Just retrieved this password " + result[0][0]);
+					// Succesful email + password
+					if (result[0][0].equals(hashtext)){
+						System.out.println("Got in!");
+						queries[0] = "SELECT wiki_user_email FROM Wikiuser w, Admin a WHERE (w.wiki_user_id = a.wiki_user_id AND w.wiki_user_email = '" + username + "')";
+						System.out.println(queries[0]);
+						result = SendQuery(this.con, queries, 2);
+						if (result.length == 0){
+							System.out.println("goodbye");
+							return true;
+						}
+						else {
+							System.out.println("Admin mode should be on");
+							setAdminMode(true);
+							return true;
+						}
+
+					}
+					else
+						return false;
+
+				}
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			}
+		}
+
+		public void setParentFrame(JFrame parent){
+			this.parent = parent;
+		}
+
+		public void setParentBrowser(Browser browser){
+			this.browser = browser;
+		}
+
+		public void setConnection(Connection con){
+			this.con = con;
+		}
+
+		public void setAdminMode(boolean isAdmin) {
+			this.isAdmin = isAdmin;
+
+		}
 	}
 
 	public static class AdminView {
 		private JFrame parent;
 		private Browser browser;
 		private Connection con;
+		private boolean isAdmin;
+
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/admin.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
+			final boolean isAdmin = this.isAdmin;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -195,9 +247,11 @@ class jdbcDB2Sample
 					AdminView av = new AdminView();
 					av.setParentFrame(parent);
 					av.setParentBrowser(browser);
+					av.setAdminMode(isAdmin);
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
+					mv.setAdminMode(isAdmin);
 					AdminQuery aq = new AdminQuery();
 					aq.setConnection(con);
 					window.asObject().setProperty("adminView", av);
@@ -205,11 +259,6 @@ class jdbcDB2Sample
 					window.asObject().setProperty("adminQuery", aq);
 				}  
 			});
-			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
-			// Embed Browser Swing component into the dialog.
-			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
-			//	this.parent.setSize(700, 500);
-			//connection();
 		}
 
 		public void setParentFrame(JFrame parent){
@@ -222,6 +271,10 @@ class jdbcDB2Sample
 
 		public void setConnection(Connection con) {
 			this.con = con;
+		}
+
+		public void setAdminMode(boolean isAdmin){
+			this.isAdmin = isAdmin;
 		}
 	}
 
@@ -229,11 +282,13 @@ class jdbcDB2Sample
 		private JFrame parent;
 		private Browser browser;
 		private Connection con;
-		
+		private boolean isAdmin;
+
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/review.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
+			final boolean isAdmin = this.isAdmin;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -245,15 +300,18 @@ class jdbcDB2Sample
 					AdminView av = new AdminView();
 					av.setParentFrame(parent);
 					av.setParentBrowser(browser);
+					av.setAdminMode(isAdmin);
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
+					av.setAdminMode(isAdmin);
 					SearchQuery sq = new SearchQuery();
 					sq.setConnection(con);
 					ReviewResultView rrv = new ReviewResultView();
 					rrv.setConnection(con);
 					rrv.setParentBrowser(browser);
 					rrv.setParentFrame(parent);
+					rrv.setAdminMode(isAdmin);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);					
 					window.asObject().setProperty("searchQuery", sq);
@@ -261,11 +319,6 @@ class jdbcDB2Sample
 				}  
 			});
 
-			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
-			// Embed Browser Swing component into the dialog.
-			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
-			//	this.parent.setSize(700, 500);
-			//connection();
 		}
 
 		public void setParentFrame(JFrame parent){
@@ -279,23 +332,25 @@ class jdbcDB2Sample
 		public void setConnection(Connection con) {
 			this.con = con;
 		}
+
+		public void setAdminMode(boolean isAdmin){
+			this.isAdmin = isAdmin;
+		}
 	}
 	public static class ItemView {
 		private JFrame parent;
 		private Browser browser;
 		private Connection con;
+		private boolean isAdmin;
 
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/item.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
+			final boolean isAdmin = this.isAdmin;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
-			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
-			// Embed Browser Swing component into the dialog.
-			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
-			//	this.parent.setSize(700, 500);	
 
 			this.browser.addScriptContextListener(new ScriptContextAdapter() {
 				@Override
@@ -305,15 +360,18 @@ class jdbcDB2Sample
 					AdminView av = new AdminView();
 					av.setParentFrame(parent);
 					av.setParentBrowser(browser);
+					av.setAdminMode(isAdmin);
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
+					mv.setAdminMode(isAdmin);
 					SearchQuery sq = new SearchQuery();
 					sq.setConnection(con);
 					ItemResultView irv = new ItemResultView();
 					irv.setConnection(con);
 					irv.setParentBrowser(browser); 
 					irv.setParentFrame(parent);
+					irv.setAdminMode(isAdmin);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);					
 					window.asObject().setProperty("searchQuery", sq);
@@ -335,6 +393,10 @@ class jdbcDB2Sample
 		public void setConnection(Connection con) {
 			this.con = con;
 		}
+
+		public void setAdminMode(boolean isAdmin){
+			this.isAdmin = isAdmin;
+		}
 	}
 
 	public static class ItemResultView {
@@ -342,11 +404,13 @@ class jdbcDB2Sample
 		private Browser browser;
 		private Connection con;
 		private String[][] queryResult;
+		private boolean isAdmin;
 
 		public void load(String filter, String inputText) {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/itemresult.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
+			final boolean isAdmin = this.isAdmin;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -368,10 +432,12 @@ class jdbcDB2Sample
 					av.setParentFrame(parent);
 					av.setParentBrowser(browser);
 					av.setConnection(con);
+					av.setAdminMode(isAdmin);
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
 					mv.setConnection(con);
+					mv.setAdminMode(isAdmin);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);	
 					window.asObject().setProperty("result", result);
@@ -391,6 +457,10 @@ class jdbcDB2Sample
 
 		public void setConnection(Connection con) {
 			this.con = con;
+		}
+
+		public void setAdminMode(boolean isAdmin){
+			this.isAdmin = isAdmin;
 		}
 
 		public String[][] getResult(){
@@ -404,11 +474,13 @@ class jdbcDB2Sample
 		private Browser browser;
 		private Connection con;
 		private String[][] queryResult;
+		private boolean isAdmin;
 
 		public void load(String filter, String inputText) {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/reviewresult.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
+			final boolean isAdmin = this.isAdmin;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -430,10 +502,12 @@ class jdbcDB2Sample
 					av.setParentFrame(parent);
 					av.setParentBrowser(browser);
 					av.setConnection(con);
+					av.setAdminMode(isAdmin);
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
 					mv.setConnection(con);
+					mv.setAdminMode(isAdmin);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);	
 					window.asObject().setProperty("result", result);
@@ -441,6 +515,11 @@ class jdbcDB2Sample
 			});
 
 			//connection();
+		}
+
+		public void setAdminMode(boolean isAdmin) {
+			this.isAdmin = isAdmin;
+
 		}
 
 		public void setParentFrame(JFrame parent){
@@ -460,10 +539,10 @@ class jdbcDB2Sample
 		}
 
 	}
-	
-	
-	
-	
+
+
+
+
 	public static class SearchQuery {
 
 		private Connection con;
@@ -477,11 +556,11 @@ class jdbcDB2Sample
 				queries[0] = "DROP VIEW result";
 				if (inputText.trim() == "") {
 					queries[1] = "CREATE VIEW result AS "
-							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country, type, genre "
+							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item";
 				} else {
 					queries[1] = "CREATE VIEW result AS "
-							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country, type, genre "
+							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item "
 							+ "WHERE CAST(item_id AS varchar(20)) LIKE '%" + inputText + "%' OR item_name LIKE '%" + inputText + "%'";
 				}
@@ -498,19 +577,18 @@ class jdbcDB2Sample
 				queries[0] = "DROP VIEW result";
 				if (inputText.trim() == "") {
 					queries[1] = "CREATE VIEW result AS "
-							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country, type, genre "
+							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item "
 							+ "WHERE type = '" + filter + "' ";
 
 				} else {
 					queries[1] = "CREATE VIEW result AS "
-							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country, type, genre "
+							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item "
 							+ "WHERE type = '" + filter + "' AND item_id IN "
 							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS varchar(20)) LIKE '%" + inputText + "%' OR item_name LIKE '%" + inputText + "%')";
 				}
 				queries[2] = "SELECT * FROM result";
-				System.out.println("hi");
 				return SendQuery(con, queries, 9);
 				//Genre
 			case "Comedy":
@@ -528,7 +606,7 @@ class jdbcDB2Sample
 
 				} else {
 					queries[1] = "CREATE VIEW result AS "
-							+ "SELECT item_id, item_name, age_restriction,item_rating, item_plink, wiki_country ,type,genre "
+							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item WHERE genre = '" + filter + "' AND item_id IN "
 							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS varchar(20)) LIKE '%" + inputText + "%' OR item_name LIKE '%" + inputText +"%')";
 				}
@@ -542,7 +620,7 @@ class jdbcDB2Sample
 				queries[0] = "DROP VIEW result";
 				if (inputText.trim() == "") {
 					queries[1] = "CREATE VIEW result AS "
-							+ "SELECT item_id, item_name, age_restriction,item_rating,item_plink,wiki_country,type,genre "
+							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item "
 							+ "WHERE age_restriction <= " + filter + " ";
 
@@ -579,15 +657,14 @@ class jdbcDB2Sample
 			case "Item":
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
-	//			if (inputText.trim() == "") {
+				if (inputText.trim() == "") {
 					queries[1] = "CREATE VIEW result AS SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id "
 							+ "FROM Review";
-
-			//	} else {
-			//		queries[1] = "CREATE VIEW result AS SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id "
-			//				+ "FROM Review WHERE item_id IN "
-			//				+ "(SELECT item_id FROM Item WHERE CAST(item_id AS varchar(20)) LIKE '%" + inputText + "%' OR item_name LIKE '%" + inputText + "%')";
-			//	}
+				} else {
+					queries[1] = "CREATE VIEW result AS SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id "
+							+ "FROM Review WHERE item_id IN "
+							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS varchar(20)) LIKE '%" + inputText + "%' OR item_name LIKE '%" + inputText + "%')";
+				}
 				queries[2] = "SELECT * FROM result";
 				return SendQuery(con, queries, 8);
 			case "User":
@@ -596,11 +673,10 @@ class jdbcDB2Sample
 				if (inputText.trim() == "") {
 					queries[1] = "CREATE VIEW result AS SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id "
 							+ "FROM Review";
-
 				} else {
 					queries[1] = "CREATE VIEW result AS "
 							+ "SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id "
-							+ "FROM Review WHERE CAST(user_id AS varchar(20)) LIKE '%" + inputText + "%' ";
+							+ "FROM Review WHERE CAST(wiki_user_id AS varchar(20)) LIKE '%" + inputText + "%' ";
 				}
 				queries[2] = "SELECT * FROM result";
 				return SendQuery(con, queries, 8);
@@ -682,9 +758,8 @@ class jdbcDB2Sample
 
 		public void addUser(String name, String DOB, String email, String country){
 			String[] queries = new String[1];
-			queries[0] = "INSERT INTO WikiUser VALUES (5, '"+ name + "', '" + DOB + "', '" + email + "', '" + country + "' )";
-			System.out.println(queries[0]);
-			SendQuery(con, queries, 4);
+			queries[0] = "INSERT INTO WikiUser VALUES (6, '"+ name + "', '" + DOB + "', '" + email + "', '" + country + "' )";
+			SendQuery(con, queries, 0);
 		}
 
 		public void addItem(String ID, String name, String ageRestriction, String link, String country){
@@ -695,15 +770,22 @@ class jdbcDB2Sample
 
 		public void removeUser(String ID) {
 			String [] queries = new String[1];
-			queries[0] = "DELETE FROM Item WHERE user_id = " + ID + ";";
+			queries[0] = "DELETE FROM WikiUser WHERE wiki_user_id = " + ID;
 			System.out.println(queries[0]);
 			SendQuery(con, queries, 0);
 		}
 
 		public void removeItem(String ID) {
 			String [] queries = new String[1];
-			queries[0] = "DELETE FROM Item WHERE item_id = " + ID + ";";
+			queries[0] = "DELETE FROM Item WHERE item_id = " + ID;
 			SendQuery(con, queries, 0);
+		}
+
+		public void evaluateReview(String ID, String status) {
+			String[] queries = new String[2];
+			//queries[0] = "UPDATE Review SET review_status ='" + status + "' WHERE review_id = " + ID;
+			//queries[1] = "INSERT INTO Evaluates VALUES ("
+			// TODO: Keep track of current user
 		}
 
 		public void setConnection(Connection con){
@@ -716,30 +798,14 @@ class jdbcDB2Sample
 		{
 			Statement stmt = con.createStatement();
 
-			//	return innerResult;
-			// Create item table as per spec
-			//		stmt.executeQuery("create table Item(item_id int not null, genre varchar(20), name varchar(50) not null, age_restriction int, purchase_link varchar(100),rating float not null , primary key (item_id))");
-			//		System.out.println("Table has been created");
-			// Insert Item tuples
-			//		stmt.executeQuery("insert into Item values(12051, 'Comedy', 'Home Alone', null, null, 9.5)");
-			//		System.out.println("Inserted new Item");
-			//		stmt.executeQuery("insert into Item values(49457, 'Horror', 'It Follows', 18, null, 7.1)");
-			//		System.out.println("Inserted new Item");
-			//		stmt.executeQuery("insert into Item values(29316, 'Romance', 'Twilight', null, 'https://www.amazon.com/Twilight-Saga-Book-1/dp/0316015849', 7.6)");
-
-			// Retrieve all items with a rating of 7.5 or more.
-			//ResultSet rs = stmt.executeQuery("select * from item where rating > 7.5");    
-			//	System.out.println("This is " + rs.getArray());
 			String[] values = new String[numValues];
 			String[][] results = new String[20][];
 			int iterationCounter = 0;
-			System.out.println("asdf");
 			for (int x = 0; x < query.length; x++){
-				System.out.println(query[x]);
 				ResultSet rs = stmt.executeQuery(query[x]);
-				if (query[x].startsWith("DROP") || query[x].startsWith("CREATE")){
+				if (query[x].startsWith("DROP") || query[x].startsWith("CREATE") || query[x].startsWith("DELETE") || query[x].startsWith("INSERT")) {
 					continue;
-				}	
+				}
 				while(rs.next())
 				{
 					System.out.println(query[x]);
@@ -754,6 +820,7 @@ class jdbcDB2Sample
 					values = new String[numValues];
 					iterationCounter++;
 				}
+
 			}
 			int nullCounter = 0;
 			for (int j = 0; j < 20; j++){
@@ -807,33 +874,6 @@ class jdbcDB2Sample
 		{
 			System.out.println("Connection failed\n" + e);
 		}
-
-		//	try
-		//	{
-		//		Statement stmt = con.createStatement();
-		// Create item table as per spec
-		//		stmt.executeQuery("create table Item(item_id int not null, genre varchar(20), name varchar(50) not null, age_restriction int, purchase_link varchar(100),rating float not null , primary key (item_id))");
-		//		System.out.println("Table has been created");
-		// Insert Item tuples
-		//		stmt.executeQuery("insert into Item values(12051, 'Comedy', 'Home Alone', null, null, 9.5)");
-		//		System.out.println("Inserted new Item");
-		//		stmt.executeQuery("insert into Item values(49457, 'Horror', 'It Follows', 18, null, 7.1)");
-		//		System.out.println("Inserted new Item");
-		//		stmt.executeQuery("insert into Item values(29316, 'Romance', 'Twilight', null, 'https://www.amazon.com/Twilight-Saga-Book-1/dp/0316015849', 7.6)");
-
-		// Retrieve all items with a rating of 7.5 or more.
-		//			ResultSet rs = stmt.executeQuery("select * from item where rating > 7.5");   
-		//		while(rs.next())
-		//		{
-		//			System.out.println("The following items have a rating of 7.5 or more:");
-		//			System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getInt(4) + " " + rs.getString(5) + " " + rs.getFloat(6));
-		//		}
-		//		return con;
-		//	}
-		//		catch (SQLException ex)
-		//	{
-		//	System.out.println(ex);
-		//		}
 		return con;
 	}
 }
