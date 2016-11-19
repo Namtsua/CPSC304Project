@@ -44,8 +44,10 @@ function DisplayMainView() {
 }
 function Query() {
     var input = document.getElementById('SearchInput').value;
-    window.searchQuery.search(filter, input);
+   // window.searchQuery.search(filter, input);
+    window.reviewResultView.load(filter, input);
 }
+
 
 function QueryPredefined(buttonID) {
     window.searchQuery.searchPredefined(buttonID);
@@ -59,7 +61,7 @@ function QueryPredefined(buttonID) {
     </button>
 </div>
 
-<div class="AdminModeButton">
+<div class="AdminModeButton" id="AdminButton">
     <button type="button" class="btn btn-sm btn-primary" onClick="DisplayAdminView();">
     Admin Mode<span class="glyphicon glyphicon-menu-right"></span>
   </button>
@@ -113,6 +115,11 @@ function QueryPredefined(buttonID) {
 
 
 <script>
+$(window).load(function() {
+      // If not in admin mode, don't display Admin Button
+      if (!window.isAdmin)
+            $('#AdminButton').hide();
+    }); 
 
 var filter = "Item";
     $(".dropdown-menu li a").click(function(){

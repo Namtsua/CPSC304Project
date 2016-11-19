@@ -69,13 +69,13 @@ function QueryPredefined(buttonID) {
     </button>
 </div>
 
-<div class="AdminModeButton" id="AdminButton">
+<div class="AdminModeButton">
     <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayAdminView();">
     Admin Mode<span class="glyphicon glyphicon-menu-right"></span>
   </button>
 </div>
 <br>
-<p class="text-primary text-left">Results</p>
+<p class="text-primary text-left">Results:</p>
 <br>
 <div class="container" id="ResultList">
     <p id = "result0"></p>
@@ -85,27 +85,21 @@ function QueryPredefined(buttonID) {
 
 <div class="container">
   <form>
-    <h3 class="text-primary">Write A Review:</h3>
+    <h3 class="text-primary">Rate A Review:</h3>
     <div class = "form-inline">
     <div class="form-group">
-      <label for="inputEmail3" class="col-xs-4 col-form-label text-muted">Item ID</label>
-      <div class="col-xs-6">
+      <label for="inputEmail3" class="col-xs-5 col-form-label text-muted">Review ID</label>
+      <div class="col-xs-3">
         <input type="email" class="form-control" id="inputEmail3" placeholder="Item ID">
       </div>
     </div>
     <div class="form-group">
-      <label for="inputEmail3" class="col-xs-4 col-form-label text-muted">Rating</label>
-      <div class="col-xs-6">
+      <label for="inputEmail3" class="col-xs-6 col-form-label text-muted text-right ">Review Rating</label>
+      <div class="col-xs-3">
         <input type="email" class="form-control" id="inputEmail3" placeholder="Rating">
       </div>
     </div>
     </div>
-    <div class="form-group">
-        <label for="ReviewComment" class="col-xs-4 text-muted">Your Review:</label>
-        <textarea id= "ReviewComment" type="text" class="form-control" rows="5" placeholder="Write a review..."></textarea>
-        <div class="form-group-btn">
-        <button class="btn btn-default" type="button" onClick="Query();">Go!</button>
-        </div>
   </form>
 </div>
 
@@ -124,11 +118,9 @@ var filter = "All";
 });
 
     $(window).load(function() {
-      // If not in admin mode, don't display Admin Button
-      if (!window.isAdmin)
-            $('#AdminButton').hide();
+        // MAKE VIEW FOR REVIEW RESULTS?
       for (var i = 0 ; i < (window.result).length(); i++){
-      $('#result'+i).html("<div class='container'><p class ='text-muted'>" + window.result[i][0] + " <small class='text-primary'> " + window.result[i][1] + ": Item rating is " + window.result[i][3] + "</small></p><h2 class='text-primary'><small>This item is a " + window.result[i][7] + " and " + window.result[i][6] + "</small></h2><h2 class='text-primary'><small>For ages " + window.result[i][2] + " and up</small></h2><h2 class='text-primary'><small>Available in " + window.result[i][5] + " at: " + window.result[i][4] + "</small></h2></div>");
+      $('#result'+i).html("<div class='container'><p class ='text-primary'>Review for " + window.result[i][6] + " by " +  window.result[i][5] + ": " + window.result[i][2] + "<small class='text-primary'> " + window.result[i][1] + "</small></p>");
       $('#ResultList').append('<p id="result'+(i+1)+'"></p>');
       }   
     }); 
