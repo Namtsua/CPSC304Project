@@ -38,19 +38,42 @@
     overflow-x: hidden;
 }
 
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    border-color: #FF8400;
+    background-color: #FF8400 !important;
+}
 
+.text-warning, .text-warning:hover, .text-warning:active, .text-warning:visited {
+    border-color: #FF8400;
+}
+
+
+    .glyphicon.glyphicon-cog {
+        font-size: 30px;
+    }
+    .navbar {
+        padding-top: 15px;
+        padding-bottom: 12px;
+        border: 0;
+        border-radius: 0;
+        margin-bottom: 0;
+        font-size: 12px;
+        letter-spacing: 5px;
+    }
 </style>
 
 
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
 <script>
-var tiger = "roar";
 function DisplayAdminView() {
   window.adminView.load();
 }
-function DisplayMainView() {
-  window.mainView.load();
+function DisplayItemView() {
+  window.itemView.load();
+}
+function DisplayReviewView() {
+  window.reviewView.load();
 }
 function Query() {
     var input = document.getElementById('SearchInput').value;
@@ -62,19 +85,26 @@ function QueryPredefined(buttonID) {
     window.searchQuery.searchPredefined(buttonID);
 }
 </script>
-
-<div class="LogOutButton" align="left">
-    <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayMainView();">
-    <span class="glyphicon glyphicon-menu-left"></span>Home
-    </button>
-</div>
-
-<div class="AdminModeButton" id="AdminButton">
-    <button type="button" class="btn btn-sm btn-primary btn-block" onClick="DisplayAdminView();">
-    Admin Mode<span class="glyphicon glyphicon-menu-right"></span>
-  </button>
-</div>
+<nav class="navbar navbar-fixed-top" style="background-color:   #3b5998">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#" style="color: #FFFFFF">Shamazon</a>
+                <a class="navbar-brand" href="#" style="color: #FF8400" onClick="DisplayItemView();return false;">Items</a>
+                <a class="navbar-brand" style="color: #000000" onClick="return false;">|</a>
+                <a class="navbar-brand" href="#" style="color: #000000" onClick="DisplayReviewView();return false;">Reviews</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-right" id="myNavbar">
+                <a id="AdminModeButton" title="Admin Mode" href="#" data-toggle="tooltip" data-placement="bottom" onclick="DisplayAdminView();return false;" style="color: #FFFFFF">
+                <span class="glyphicon glyphicon-cog"></span>
+            </a>
+        </div>
+    </div>
+</nav>
 <br>
+<br>
+<br>
+<br>
+
 <p class="text-primary text-left">Results</p>
 <br>
 <div class="container" id="ResultList">
@@ -126,12 +156,17 @@ var filter = "All";
     $(window).load(function() {
       // If not in admin mode, don't display Admin Button
       if (!window.isAdmin)
-            $('#AdminButton').hide();
+            $('#AdminModeButton').hide();
       for (var i = 0 ; i < (window.result).length(); i++){
       $('#result'+i).html("<div class='container'><p class ='text-muted'>" + window.result[i][0] + " <small class='text-primary'> " + window.result[i][1] + ": Item rating is " + window.result[i][3] + "</small></p><h2 class='text-primary'><small>This item is a " + window.result[i][7] + " and " + window.result[i][6] + "</small></h2><h2 class='text-primary'><small>For ages " + window.result[i][2] + " and up</small></h2><h2 class='text-primary'><small>Available in " + window.result[i][5] + " at: " + window.result[i][4] + "</small></h2></div>");
       $('#ResultList').append('<p id="result'+(i+1)+'"></p>');
       }   
     }); 
+
+    
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 
 </script>
 </body>

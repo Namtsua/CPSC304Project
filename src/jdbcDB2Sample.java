@@ -120,7 +120,7 @@ class jdbcDB2Sample
 		private String ID;
 
 		public void load() {
-			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/main.html");
+			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/item.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
 			final boolean isAdmin = this.isAdmin;
@@ -282,12 +282,27 @@ class jdbcDB2Sample
 					mv.setAdminMode(isAdmin);
 					mv.setConnection(con);
 					mv.setCurrentUser(ID);
+					ReviewView rv = new ReviewView();
+					rv.setParentFrame(parent);
+					rv.setParentBrowser(browser);
+					rv.setAdminMode(isAdmin);
+					rv.setConnection(con);
+					rv.setCurrentUser(ID);
+					ItemView iv = new ItemView();
+					iv.setParentFrame(parent);
+					iv.setParentBrowser(browser);
+					iv.setAdminMode(isAdmin);
+					iv.setConnection(con);
+					iv.setCurrentUser(ID);
 					AdminQuery aq = new AdminQuery();
 					aq.setConnection(con);
 					aq.setCurrentUser(ID);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);
 					window.asObject().setProperty("adminQuery", aq);
+					window.asObject().setProperty("reviewView", rv);
+					window.asObject().setProperty("itemView", iv);
+					
 				}  
 			});
 		}
@@ -671,11 +686,12 @@ class jdbcDB2Sample
 				}
 				queries[2] = "SELECT * FROM result";
 				return SendQuery(con, queries, 8);
-				// Age Restriction TODO: Need to change these to numbers
-			case "Under 6":
-			case "7-17":
-			case "18+":
+			case "5 And Under":
+			case "13 And Under":
+			case "17 And Under":
 				queries = new String[3];
+				filter = filter.replaceAll("\\D+","");
+				System.out.println(filter);
 				queries[0] = "DROP VIEW result";
 				if (inputText.trim().equals("")) {
 					queries[1] = "CREATE VIEW result AS "
@@ -829,10 +845,11 @@ class jdbcDB2Sample
 			SendQuery(con, queries, 0);
 		}
 
-		// TODO: Update Javascript to handle these two fields
+		// TODO: Update Javascript to handle these two fields -> it works now
 		public void addItem(String ID, String name, String ageRestriction, String link, String country, String type, String genre){
 			String[] queries = new String[1];
-			queries[0] = "INSERT INTO Item VALUES (0, " +  name + ", " + ageRestriction + ", 0.0, 0, 0.0, " + link + ", " + country + ", " + type + ", " + genre + ")";
+			queries[0] = "INSERT INTO Item VALUES (0, '" +  name + "', " + ageRestriction + ", 0.0, 0, 0.0, '" + link + "', '" + country + "', '" + type + "', '" + genre + "')";
+			System.out.println(queries[0]);
 			SendQuery(con, queries, 0);
 		}
 
