@@ -60,12 +60,14 @@ class jdbcDB2Sample
 		private Browser browser;
 		private Connection con;
 		private boolean isAdmin;
+		private String ID;
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/index.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
 			final Browser browser = this.browser;
 			final boolean isAdmin = this.isAdmin;
+			final String ID = this.ID;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -80,6 +82,7 @@ class jdbcDB2Sample
 					mv.setParentBrowser(browser);
 					mv.setConnection(con);
 					mv.setAdminMode(isAdmin);
+					mv.setCurrentUser(ID);
 					//TODO: Maybe set admin mode here?
 					window.asObject().setProperty("mainView", mv);					
 				}  
@@ -102,6 +105,11 @@ class jdbcDB2Sample
 			this.isAdmin = isAdmin;
 
 		}
+
+		public void setCurrentUser(String ID) {
+			this.ID = ID;
+			
+		}
 	}
 
 	public static class MainView {
@@ -109,12 +117,14 @@ class jdbcDB2Sample
 		private Browser browser;
 		private Connection con;
 		private boolean isAdmin;
+		private String ID;
 
 		public void load() {
-			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/main.html");
+			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/item.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
 			final boolean isAdmin = this.isAdmin;
+			final String ID = this.ID;
 			System.out.println("IS ADMIN MODE ON? " + isAdmin);
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
@@ -130,21 +140,25 @@ class jdbcDB2Sample
 					lv.setParentBrowser(browser);
 					lv.setConnection(con);
 					lv.setAdminMode(false);
+					lv.setCurrentUser(ID);
 					AdminView av = new AdminView();
 					av.setParentFrame(parent);
 					av.setParentBrowser(browser);
 					av.setConnection(con);
 					av.setAdminMode(isAdmin);
+					av.setCurrentUser(ID);
 					ItemView iv = new ItemView();
 					iv.setParentFrame(parent);
 					iv.setParentBrowser(browser);
 					iv.setConnection(con);
 					iv.setAdminMode(isAdmin);
+					iv.setCurrentUser(ID);
 					ReviewView rv = new ReviewView();
 					rv.setParentFrame(parent);
 					rv.setParentBrowser(browser);
 					rv.setConnection(con);
 					rv.setAdminMode(isAdmin);
+					rv.setCurrentUser(ID);
 					window.asObject().setProperty("loginView", lv);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("itemView", iv);
@@ -156,6 +170,7 @@ class jdbcDB2Sample
 
 		public boolean login(String username, String password){
 			//TODO: Hash password
+			System.out.println("Attempting to log in");
 			MessageDigest md;
 			try {
 
@@ -186,12 +201,18 @@ class jdbcDB2Sample
 						System.out.println(queries[0]);
 						result = SendQuery(this.con, queries, 2);
 						if (result.length == 0){
-							System.out.println("goodbye");
+							queries[0] = "SELECT wiki_user_id FROM Wikiuser WHERE wiki_user_email = '" + username +"'";
+							result = SendQuery(this.con, queries, 2);
+							setCurrentUser(result[0][0]);
 							return true;
 						}
 						else {
 							System.out.println("Admin mode should be on");
+							queries[0] = "SELECT wiki_user_id FROM Wikiuser WHERE wiki_user_email = '" + username +"'";
+							result = SendQuery(this.con, queries, 2);
+							System.out.println("goodbye and user id is " + result[0][0]);
 							setAdminMode(true);
+							setCurrentUser(result[0][0]);
 							return true;
 						}
 
@@ -221,7 +242,10 @@ class jdbcDB2Sample
 
 		public void setAdminMode(boolean isAdmin) {
 			this.isAdmin = isAdmin;
-
+		}
+		
+		public void setCurrentUser(String ID){
+			this.ID = ID;
 		}
 	}
 
@@ -230,12 +254,14 @@ class jdbcDB2Sample
 		private Browser browser;
 		private Connection con;
 		private boolean isAdmin;
+		private String ID;
 
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/admin.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
 			final boolean isAdmin = this.isAdmin;
+			final String ID = this.ID;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -248,17 +274,41 @@ class jdbcDB2Sample
 					av.setParentFrame(parent);
 					av.setParentBrowser(browser);
 					av.setAdminMode(isAdmin);
+					av.setConnection(con);
+					av.setCurrentUser(ID);
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
 					mv.setAdminMode(isAdmin);
+					mv.setConnection(con);
+					mv.setCurrentUser(ID);
+					ReviewView rv = new ReviewView();
+					rv.setParentFrame(parent);
+					rv.setParentBrowser(browser);
+					rv.setAdminMode(isAdmin);
+					rv.setConnection(con);
+					rv.setCurrentUser(ID);
+					ItemView iv = new ItemView();
+					iv.setParentFrame(parent);
+					iv.setParentBrowser(browser);
+					iv.setAdminMode(isAdmin);
+					iv.setConnection(con);
+					iv.setCurrentUser(ID);
 					AdminQuery aq = new AdminQuery();
 					aq.setConnection(con);
+					aq.setCurrentUser(ID);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);
 					window.asObject().setProperty("adminQuery", aq);
+					window.asObject().setProperty("reviewView", rv);
+					window.asObject().setProperty("itemView", iv);
+					
 				}  
 			});
+		}
+
+		public void setCurrentUser(String ID) {
+			this.ID = ID;
 		}
 
 		public void setParentFrame(JFrame parent){
@@ -283,12 +333,14 @@ class jdbcDB2Sample
 		private Browser browser;
 		private Connection con;
 		private boolean isAdmin;
+		private String ID;
 
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/review.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
 			final boolean isAdmin = this.isAdmin;
+			final String ID = this.ID;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -301,10 +353,14 @@ class jdbcDB2Sample
 					av.setParentFrame(parent);
 					av.setParentBrowser(browser);
 					av.setAdminMode(isAdmin);
+					av.setConnection(con);
+					av.setCurrentUser(ID);
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
-					av.setAdminMode(isAdmin);
+					mv.setAdminMode(isAdmin);
+					mv.setConnection(con);
+					mv.setCurrentUser(ID);
 					SearchQuery sq = new SearchQuery();
 					sq.setConnection(con);
 					ReviewResultView rrv = new ReviewResultView();
@@ -312,6 +368,7 @@ class jdbcDB2Sample
 					rrv.setParentBrowser(browser);
 					rrv.setParentFrame(parent);
 					rrv.setAdminMode(isAdmin);
+					rrv.setCurrentUser(ID);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);					
 					window.asObject().setProperty("searchQuery", sq);
@@ -319,6 +376,10 @@ class jdbcDB2Sample
 				}  
 			});
 
+		}
+
+		public void setCurrentUser(String ID) {
+			this.ID = ID;
 		}
 
 		public void setParentFrame(JFrame parent){
@@ -342,12 +403,14 @@ class jdbcDB2Sample
 		private Browser browser;
 		private Connection con;
 		private boolean isAdmin;
+		private String ID;
 
 		public void load() {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/item.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
 			final boolean isAdmin = this.isAdmin;
+			final String ID = this.ID;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -361,10 +424,14 @@ class jdbcDB2Sample
 					av.setParentFrame(parent);
 					av.setParentBrowser(browser);
 					av.setAdminMode(isAdmin);
+					av.setConnection(con);
+					av.setCurrentUser(ID);
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
 					mv.setAdminMode(isAdmin);
+					mv.setConnection(con);
+					mv.setCurrentUser(ID);
 					SearchQuery sq = new SearchQuery();
 					sq.setConnection(con);
 					ItemResultView irv = new ItemResultView();
@@ -372,6 +439,7 @@ class jdbcDB2Sample
 					irv.setParentBrowser(browser); 
 					irv.setParentFrame(parent);
 					irv.setAdminMode(isAdmin);
+					irv.setCurrentUser(ID);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);					
 					window.asObject().setProperty("searchQuery", sq);
@@ -380,6 +448,10 @@ class jdbcDB2Sample
 			});
 
 			//connection();
+		}
+
+		public void setCurrentUser(String ID) {
+			this.ID = ID;
 		}
 
 		public void setParentFrame(JFrame parent){
@@ -405,12 +477,14 @@ class jdbcDB2Sample
 		private Connection con;
 		private String[][] queryResult;
 		private boolean isAdmin;
-
+		private String ID;
+		
 		public void load(String filter, String inputText) {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/itemresult.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
 			final boolean isAdmin = this.isAdmin;
+			final String ID = this.ID;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -418,11 +492,7 @@ class jdbcDB2Sample
 			sq.setConnection(con);
 			final String[][] result = sq.search(filter, inputText);
 			this.queryResult = result;
-			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
-			// Embed Browser Swing component into the dialog.
-			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
-			//	this.parent.setSize(700, 500);	
-
+			
 			this.browser.addScriptContextListener(new ScriptContextAdapter() {
 				@Override
 				public void onScriptContextCreated(ScriptContextEvent event) {
@@ -433,18 +503,22 @@ class jdbcDB2Sample
 					av.setParentBrowser(browser);
 					av.setConnection(con);
 					av.setAdminMode(isAdmin);
+					av.setCurrentUser(ID);
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
 					mv.setConnection(con);
 					mv.setAdminMode(isAdmin);
+					mv.setCurrentUser(ID);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);	
 					window.asObject().setProperty("result", result);
 				}  
 			});
+		}
 
-			//connection();
+		public void setCurrentUser(String ID) {
+			this.ID = ID;
 		}
 
 		public void setParentFrame(JFrame parent){
@@ -475,12 +549,14 @@ class jdbcDB2Sample
 		private Connection con;
 		private String[][] queryResult;
 		private boolean isAdmin;
-
+		private String ID;
+		
 		public void load(String filter, String inputText) {
 			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/reviewresult.html");
 			final JFrame parent = this.parent;
 			final Connection con = this.con;
 			final boolean isAdmin = this.isAdmin;
+			final String ID = this.ID;
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
@@ -488,10 +564,6 @@ class jdbcDB2Sample
 			sq.setConnection(con);
 			final String[][] result = sq.search(filter, inputText);
 			this.queryResult = result;
-			//  	 dialog.setDefaultCloseOperation(WindowConstants.);
-			// Embed Browser Swing component into the dialog.
-			//	this.parent.add(new BrowserView(this.browser), BorderLayout.CENTER);
-			//	this.parent.setSize(700, 500);	
 
 			this.browser.addScriptContextListener(new ScriptContextAdapter() {
 				@Override
@@ -503,18 +575,22 @@ class jdbcDB2Sample
 					av.setParentBrowser(browser);
 					av.setConnection(con);
 					av.setAdminMode(isAdmin);
+					av.setCurrentUser(ID);
 					MainView mv = new MainView();
 					mv.setParentFrame(parent);
 					mv.setParentBrowser(browser);
 					mv.setConnection(con);
 					mv.setAdminMode(isAdmin);
+					mv.setCurrentUser(ID);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);	
 					window.asObject().setProperty("result", result);
 				}  
 			});
+		}
 
-			//connection();
+		public void setCurrentUser(String ID) {
+			this.ID = ID;
 		}
 
 		public void setAdminMode(boolean isAdmin) {
@@ -541,8 +617,6 @@ class jdbcDB2Sample
 	}
 
 
-
-
 	public static class SearchQuery {
 
 		private Connection con;
@@ -554,7 +628,7 @@ class jdbcDB2Sample
 			case "All":
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
-				if (inputText.trim() == "") {
+				if (inputText.trim().equals("")) {
 					queries[1] = "CREATE VIEW result AS "
 							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item";
@@ -575,7 +649,7 @@ class jdbcDB2Sample
 				queries = new String[3];
 				System.out.println("hi");
 				queries[0] = "DROP VIEW result";
-				if (inputText.trim() == "") {
+				if (inputText.trim().equals("")) {
 					queries[1] = "CREATE VIEW result AS "
 							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item "
@@ -612,13 +686,14 @@ class jdbcDB2Sample
 				}
 				queries[2] = "SELECT * FROM result";
 				return SendQuery(con, queries, 8);
-				// Age Restriction TODO: Need to change these to numbers
-			case "Under 6":
-			case "7-17":
-			case "18+":
+			case "5 And Under":
+			case "13 And Under":
+			case "17 And Under":
 				queries = new String[3];
+				filter = filter.replaceAll("\\D+","");
+				System.out.println(filter);
 				queries[0] = "DROP VIEW result";
-				if (inputText.trim() == "") {
+				if (inputText.trim().equals("")) {
 					queries[1] = "CREATE VIEW result AS "
 							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item "
@@ -626,7 +701,7 @@ class jdbcDB2Sample
 
 				} else {
 					queries[1] = "CREATE VIEW result AS "
-							+ "SELECT item_id, item_name, age_restriction,item_rating,item_plink,wiki_country,type,genre "
+							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item WHERE age_restriction <= " + filter + " AND item_id IN (SELECT item_id FROM Item "
 							+ "WHERE CAST(item_id AS varcahr(20)) LIKE '%" + inputText + "%' OR item_name LIKE '%" + inputText + "%')";
 				}
@@ -640,7 +715,7 @@ class jdbcDB2Sample
 				queries = new String[3];
 				filter = filter.substring(0, 1);
 				queries[0] = "DROP VIEW result";
-				if (inputText.trim() == "") {
+				if (inputText.trim().equals("")) {
 					queries[1] = "CREATE VIEW result AS "
 							+ "SELECT item_id, item_name, age_restriction, item_rating, item_plink, wiki_country, type, genre "
 							+ "FROM Item WHERE item_rating >= " + filter;
@@ -657,7 +732,7 @@ class jdbcDB2Sample
 			case "Item":
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
-				if (inputText.trim() == "") {
+				if (inputText.trim().equals("")) {
 					queries[1] = "CREATE VIEW result AS SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id "
 							+ "FROM Review";
 				} else {
@@ -670,7 +745,7 @@ class jdbcDB2Sample
 			case "User":
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
-				if (inputText.trim() == "") {
+				if (inputText.trim().equals("")) {
 					queries[1] = "CREATE VIEW result AS SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id "
 							+ "FROM Review";
 				} else {
@@ -755,16 +830,26 @@ class jdbcDB2Sample
 
 	public static class AdminQuery{
 		private Connection con;
+		private String AdminID;
+
+		public void setCurrentUser(String ID) {
+			this.AdminID = ID;
+			
+		}
 
 		public void addUser(String name, String DOB, String email, String country){
 			String[] queries = new String[1];
-			queries[0] = "INSERT INTO WikiUser VALUES (6, '"+ name + "', '" + DOB + "', '" + email + "', '" + country + "' )";
+			queries[0] = "INSERT INTO WikiUser VALUES (0, '"+ name + "', '" + DOB + "', '" + email + "', '" + country + "' )";
+			queries[1] = "INSERT INTO Reviewer VALUES( 0, wikiuser_seq.CURRVAL)";
+			queries[2] = "INSERT INTO Manages VALUES ( " + this.AdminID + ", wikiuser_seq.CURRVAL)";
 			SendQuery(con, queries, 0);
 		}
 
-		public void addItem(String ID, String name, String ageRestriction, String link, String country){
+		// TODO: Update Javascript to handle these two fields -> it works now
+		public void addItem(String ID, String name, String ageRestriction, String link, String country, String type, String genre){
 			String[] queries = new String[1];
-			queries[0] = "INSERT INTO Item VALUES ("+ ID + ", " +  name + ", " + ageRestriction + ", " + link + ", " + country + " )";
+			queries[0] = "INSERT INTO Item VALUES (0, '" +  name + "', " + ageRestriction + ", 0.0, 0, 0.0, '" + link + "', '" + country + "', '" + type + "', '" + genre + "')";
+			System.out.println(queries[0]);
 			SendQuery(con, queries, 0);
 		}
 
@@ -781,13 +866,32 @@ class jdbcDB2Sample
 			SendQuery(con, queries, 0);
 		}
 
+		//TODO: Add this? Unsure where it goes
+		public void removeReview(String ID) {
+			String [] queries = new String[1];
+			queries[0] = "DELETE FROM Review WHERE review_id = " + ID;
+			SendQuery(con, queries, 0);
+		}
+		
 		public void evaluateReview(String ID, String status) {
 			String[] queries = new String[2];
-			//queries[0] = "UPDATE Review SET review_status ='" + status + "' WHERE review_id = " + ID;
-			//queries[1] = "INSERT INTO Evaluates VALUES ("
-			// TODO: Keep track of current user
+			queries[0] = "UPDATE Review SET review_status ='" + status + "' WHERE review_id = " + ID;
+			queries[1] = "INSERT INTO Evaluates VALUES (" + this.AdminID + ", " + ID + ")";
+			SendQuery(con, queries, 0);
 		}
-
+		
+		// TODO: Return the result and integrate into app, can search either by name or USERID
+		public void findUser(String ID) {
+			String[] queries = new String[3];
+			queries[0] = "DROP VIEW result";
+			queries[1] = "SELECT wiki_user_id, wiki_user_name, wiki_user_DOB, wiki_user_email, wiki_country "
+					+ "FROM WikiUser "
+					+ "WHERE CAST(user_id AS varchar(20)) LIKE '%"+ ID + "' OR user_name LIKE '%" + ID + "%') AND wiki_user_id IN "
+					+ "(SELECT wiki_user_id FROM Reviewer)";
+			queries[2] = "SELECT * FROM result";
+			SendQuery(con, queries, 6);
+		}
+		
 		public void setConnection(Connection con){
 			this.con = con;
 		}

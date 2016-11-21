@@ -19,16 +19,48 @@
     }
 
     p {
-        font-size: 32px;
+    font-family: Droid Sans;
+    font-size: 32px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+    a {
+        font-family: Droid Sans;
     }
 
-    .ReturnButton {position:absolute; top:5px; left:5px;}
+    .LogOutButton {position:absolute; top:5px; left:5px;}
     .AdminModeButton {position:absolute; top:5px; right:10px;}
     .scrollable-menu {
     height: auto;
     max-height: 200px;
     overflow-x: hidden;
 }
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    border-color: #FF8400;
+    background-color: #FF8400 !important;
+}
+
+.text-warning, .text-warning:hover, .text-warning:active, .text-warning:visited {
+    border-color: #FF8400;
+}
+
+
+    .glyphicon.glyphicon-cog {
+        font-size: 30px;
+    }
+    .navbar {
+        padding-top: 15px;
+        padding-bottom: 12px;
+        border: 0;
+        border-radius: 0;
+        margin-bottom: 0;
+        font-size: 12px;
+        letter-spacing: 0px;
+    }
 
 </style>
 
@@ -38,6 +70,12 @@
 <script>
 function DisplayMainView() {
   window.mainView.load();
+}
+function DisplayItemView() {
+  window.itemView.load();
+}
+function DisplayReviewView() {
+  window.reviewView.load();
 }
 function RemoveUser() {
   var UserID = document.getElementById('RemovedUserID').value;
@@ -60,15 +98,30 @@ function AddItem() {
   var ageRestriction = document.getElementById('AgeRestriction').value;
   var link = document.getElementById('PurchaseLink').value;
   var country = document.getElementById('ItemCountry').value;
-  window.adminQuery.addItem(IID, itemName, ageRestriction, link, country);
+  var type = document.getElementById('ItemType').value;
+  var genre = document.getElementById('ItemGenre').value;
+  window.adminQuery.addItem(IID, itemName, ageRestriction, link, country, type, genre);
 }
 </script>
 
-<div class="ReturnButton" align="left">
-    <button type="button" class="btn btn-sm btn-primary" onClick="DisplayMainView();">
-    <span class="glyphicon glyphicon-menu-left"></span>Back to previous page
-    </button>
-</div>
+
+<nav class="navbar navbar-fixed-top" style="background-color:   #3b5998">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#" style="color: #FFFFFF">Shamazon</a>
+                <a class="navbar-brand" href="#" style="color: #FF8400">Admin</a>
+                <a class="navbar-brand" style="color: #000000" onClick="return false;">|</a>
+                <a class="navbar-brand" href="#" style="color: #000000" onClick="DisplayItemView();return false;">Items</a>
+                <a class="navbar-brand" style="color: #000000" onClick="return false;">|</a>
+                <a class="navbar-brand" href="#" style="color: #000000" onClick="DisplayReviewView();return false;">Reviews</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-right" id="myNavbar">
+                <a id="AdminModeButton" title="Admin Mode" href="#" data-toggle="tooltip" data-placement="bottom" onclick="DisplayAdminView();return false;" style="color: #FFFFFF">
+                <span class="glyphicon glyphicon-cog"></span>
+            </a>
+        </div>
+    </div>
+</nav>
 <br>
 
 <div class="container">
@@ -187,6 +240,18 @@ function AddItem() {
       </div>
     </div>
     <div class="form-group row">
+      <label for="ItemType" class="col-xs-3 col-form-label text-muted">Type</label>
+      <div class="col-xs-6">
+        <input type="DOB" class="form-control" id="ItemType" placeholder="Type" maxlength="20">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="ItemGenre" class="col-xs-3 col-form-label text-muted">Genre</label>
+      <div class="col-xs-6">
+        <input type="DOB" class="form-control" id="ItemGenre" placeholder="Genre" maxlength="20">
+      </div>
+    </div>
+    <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
         <button type="submit" class="btn btn-primary" onClick="AddItem();">Add Item</button>
       </div>
@@ -233,6 +298,10 @@ function AddItem() {
   $(this).parents(".form-group").find('.btn').html($(this).text() + ' <span class="caret"></span>');
   $(this).parents(".form-group").find('.btn').val($(this).data('value'));
 });
+
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 </script>
 </body>
 </html>

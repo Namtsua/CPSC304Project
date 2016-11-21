@@ -17,6 +17,14 @@
 function DisplayMainView() {
     window.mainView.load();
 }
+
+function Login() {
+    var userEmail = document.getElementById('UserEmail').value;
+    var password = document.getElementById('UserPassword').value;
+    var loginResult = window.mainView.login(userEmail, password);
+    if (loginResult)
+        window.mainView.load();
+}
 </script>
 <div id="login" class="container-fluid bg-4 text-center">
     <h3>Login</h3>
@@ -27,13 +35,13 @@ function DisplayMainView() {
             <div class="main-login-form">
                 <div class="login-group">
                     <div class="form-group">
-                        <input type="tetx" class="form-control" id="email" placeholder="Email Address">
+                        <input type="tetx" class="form-control" id="UserEmail" placeholder="Email Address">
                     </div>
                     <div class="form-group"
->                        <input type="password" class="form-control" id="password" placeholder="Password">
+>                        <input type="password" class="form-control" id="UserPassword" placeholder="Password">
                     </div>
                 </div>
-                <button class="btn btn-lg btn-primary btn-block" type="button" onClick="DisplayMainView();">Login</button>   
+                <button class="btn btn-lg btn-primary btn-block" type="button" onClick="Login();">Login</button>   
             </div>
         </div>
     </div>
