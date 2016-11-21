@@ -7,8 +7,9 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link href="http://fonts.googleapis.com/css?family=Droid%20Sans" rel="stylesheet">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="../../js/jquery-3.1.1.js"></script>
+    <script src="../../js/Parsley.js-2.6.0/dist/parsley.min.js"></script>
 </head>
 
 <style>
@@ -62,6 +63,40 @@
         letter-spacing: 0px;
     }
 
+   input.parsley-success,
+select.parsley-success,
+textarea.parsley-success {
+  color: #468847;
+  background-color: #DFF0D8;
+  border: 1px solid #D6E9C6;
+}
+
+input.parsley-error,
+select.parsley-error,
+textarea.parsley-error {
+  color: #B94A48;
+  background-color: #F2DEDE;
+  border: 1px solid #EED3D7;
+}
+
+.parsley-errors-list {
+  margin: 2px 0 3px;
+  padding: 0;
+  list-style-type: none;
+  font-size: 0.9em;
+  line-height: 0.9em;
+  opacity: 0;
+  color: #000000;
+
+  transition: all .3s ease-in;
+  -o-transition: all .3s ease-in;
+  -moz-transition: all .3s ease-in;
+  -webkit-transition: all .3s ease-in;
+}
+
+.parsley-errors-list.filled {
+  opacity: 1;
+}
 </style>
 
 
@@ -77,6 +112,9 @@ function DisplayItemView() {
 function DisplayReviewView() {
   window.reviewView.load();
 }
+function DisplayLoginView() {
+    window.loginView.load();
+}
 function RemoveUser() {
   var UserID = document.getElementById('RemovedUserID').value;
   window.adminQuery.removeUser(UserID);
@@ -90,17 +128,17 @@ function AddUser() {
   var DOB = document.getElementById('DateOfBirth').value;
   var email = document.getElementById('UserEmail').value;
   var country = document.getElementById('UserCountry').value;
-  window.adminQuery.addUser(name, DOB, email, country);
+  var password = document.getElementById('UserPassword').value;
+  window.adminQuery.addUser(name, DOB, email, password, country);
 }
 function AddItem() {
-  var IID = document.getElementById('AddedItemID').value;
   var itemName = document.getElementById('ItemName').value;
   var ageRestriction = document.getElementById('AgeRestriction').value;
   var link = document.getElementById('PurchaseLink').value;
   var country = document.getElementById('ItemCountry').value;
   var type = document.getElementById('ItemType').value;
   var genre = document.getElementById('ItemGenre').value;
-  window.adminQuery.addItem(IID, itemName, ageRestriction, link, country, type, genre);
+  window.adminQuery.addItem(itemName, ageRestriction, link, country, type, genre);
 }
 </script>
 
@@ -116,6 +154,7 @@ function AddItem() {
                 <a class="navbar-brand" href="#" style="color: #000000" onClick="DisplayReviewView();return false;">Reviews</a>
         </div>
         <div class="collapse navbar-collapse navbar-right" id="myNavbar">
+                <a class="navbar-brand" href="#" style="color: #FFFFFF" onClick="DisplayLoginView();return false;">Sign Out</a>
                 <a id="AdminModeButton" title="Admin Mode" href="#" data-toggle="tooltip" data-placement="bottom" onclick="DisplayAdminView();return false;" style="color: #FFFFFF">
                 <span class="glyphicon glyphicon-cog"></span>
             </a>
@@ -123,7 +162,7 @@ function AddItem() {
     </div>
 </nav>
 <br>
-
+<br>
 <div class="container">
   <form>
     <h3 class="text-primary">Find User</h3>
@@ -142,30 +181,36 @@ function AddItem() {
 </div>
 
 <div class="container">
-  <form>
+  <form id="UserForm">
     <h3 class="text-primary">Add User</h3>
     <div class="form-group row">
       <label for="UserName" class="col-xs-3 col-form-label text-muted">Full Name</label>
       <div class="col-xs-6">
-        <input type="text" class="form-control" id="UserName" placeholder="Name" maxlength="20">
+        <input type="text" class="form-control" id="UserName" placeholder="Name" data-parsley-length="[4, 20]" data-parsley-trigger="change" data-parsley-required="true">
       </div>
     </div>
     <div class="form-group row">
       <label for="DateOfBirth" class="col-xs-3 col-form-label text-muted">Date Of Birth</label>
       <div class="col-xs-6">
-        <input type="DOB" class="form-control" id="DateOfBirth" placeholder="DD/MM/YYYY">
+        <input type="DOB" class="form-control" id="DateOfBirth" placeholder="DD/MMM/YYYY (example: 02/Jan/1995)">
       </div>
     </div>
     <div class="form-group row">
       <label for="UserEmail" class="col-xs-3 col-form-label text-muted">Email</label>
       <div class="col-xs-6">
-        <input type="DOB" class="form-control" id="UserEmail" placeholder="Email" maxlength="100">
+        <input type="email" class="form-control" id="UserEmail" placeholder="Email" maxlength="100" data-parsley-trigger="change" data-parsley-required="true">
       </div>
     </div>
     <div class="form-group row">
       <label for="UserCountry" class="col-xs-3 col-form-label text-muted">Country</label>
       <div class="col-xs-6">
         <input type="DOB" class="form-control" id="UserCountry" placeholder="Country" maxlength="20">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="UserPassword" class="col-xs-3 col-form-label text-muted">Password</label>
+      <div class="col-xs-6">
+        <input type="password" class="form-control" id="UserPassword" placeholder="Password" maxlength="20">
       </div>
     </div>
     <div class="form-group row">
@@ -209,12 +254,6 @@ function AddItem() {
 <div class="container">
   <form>
     <h3 class="text-primary">Add Item</h3>
-    <div class="form-group row">
-      <label for="AddedItemID" class="col-xs-3 col-form-label text-muted">Item ID</label>
-      <div class="col-xs-6">
-        <input type="email" class="form-control" id="AddedItemID" placeholder="Item ID">
-      </div>
-    </div>
     <div class="form-group row">
       <label for="ItemName" class="col-xs-3 col-form-label text-muted">Item Name</label>
       <div class="col-xs-6">
@@ -302,6 +341,18 @@ function AddItem() {
     $(document).ready(function() {
         $('[data-toggle="tooltip"]').tooltip();
     });
+</script>
+<script type="text/javascript">
+ $(function () {
+  $('#UserForm').parsley().on('field:validated', function() {
+    var ok = $('.parsley-error').length === 0;
+    $('.bs-callout-info').toggleClass('hidden', !ok);
+    $('.bs-callout-warning').toggleClass('hidden', ok);
+  })
+  .on('form:submit', function() {
+    return false; // Don't submit form for this demo
+  });
+});
 </script>
 </body>
 </html>

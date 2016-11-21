@@ -159,10 +159,17 @@ class jdbcDB2Sample
 					rv.setConnection(con);
 					rv.setAdminMode(isAdmin);
 					rv.setCurrentUser(ID);
+					ItemResultView irv = new ItemResultView();
+					irv.setConnection(con);
+					irv.setParentBrowser(browser); 
+					irv.setParentFrame(parent);
+					irv.setAdminMode(isAdmin);
+					irv.setCurrentUser(ID);
 					window.asObject().setProperty("loginView", lv);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("itemView", iv);
-					window.asObject().setProperty("reviewView", rv);	
+					window.asObject().setProperty("reviewView", rv);
+					window.asObject().setProperty("itemResultView", irv);
 					window.asObject().setProperty("isAdmin", isAdmin);
 				}  
 			});
@@ -361,6 +368,12 @@ class jdbcDB2Sample
 					mv.setAdminMode(isAdmin);
 					mv.setConnection(con);
 					mv.setCurrentUser(ID);
+					LoginView lv = new LoginView();
+					lv.setParentFrame(parent);
+					lv.setParentBrowser(browser);
+					lv.setAdminMode(isAdmin);
+					lv.setConnection(con);
+					lv.setCurrentUser(ID);
 					SearchQuery sq = new SearchQuery();
 					sq.setConnection(con);
 					ReviewResultView rrv = new ReviewResultView();
@@ -372,7 +385,8 @@ class jdbcDB2Sample
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);					
 					window.asObject().setProperty("searchQuery", sq);
-					window.asObject().setProperty("reviewResultView", rrv);;
+					window.asObject().setProperty("reviewResultView", rrv);
+					window.asObject().setProperty("loginView", lv);
 				}  
 			});
 
@@ -432,6 +446,12 @@ class jdbcDB2Sample
 					mv.setAdminMode(isAdmin);
 					mv.setConnection(con);
 					mv.setCurrentUser(ID);
+					LoginView lv = new LoginView();
+					lv.setParentFrame(parent);
+					lv.setParentBrowser(browser);
+					lv.setAdminMode(isAdmin);
+					lv.setConnection(con);
+					lv.setCurrentUser(ID);
 					SearchQuery sq = new SearchQuery();
 					sq.setConnection(con);
 					ItemResultView irv = new ItemResultView();
@@ -444,6 +464,7 @@ class jdbcDB2Sample
 					window.asObject().setProperty("mainView", mv);					
 					window.asObject().setProperty("searchQuery", sq);
 					window.asObject().setProperty("itemResultView", irv);
+					window.asObject().setProperty("loginView", lv);
 				}  
 			});
 
@@ -510,8 +531,15 @@ class jdbcDB2Sample
 					mv.setConnection(con);
 					mv.setAdminMode(isAdmin);
 					mv.setCurrentUser(ID);
+					LoginView lv = new LoginView();
+					lv.setParentFrame(parent);
+					lv.setParentBrowser(browser);
+					lv.setAdminMode(isAdmin);
+					lv.setConnection(con);
+					lv.setCurrentUser(ID);
 					window.asObject().setProperty("adminView", av);
-					window.asObject().setProperty("mainView", mv);	
+					window.asObject().setProperty("mainView", mv);
+					window.asObject().setProperty("loginView", lv);
 					window.asObject().setProperty("result", result);
 				}  
 			});
@@ -582,8 +610,15 @@ class jdbcDB2Sample
 					mv.setConnection(con);
 					mv.setAdminMode(isAdmin);
 					mv.setCurrentUser(ID);
+					LoginView lv = new LoginView();
+					lv.setParentFrame(parent);
+					lv.setParentBrowser(browser);
+					lv.setAdminMode(isAdmin);
+					lv.setConnection(con);
+					lv.setCurrentUser(ID);
 					window.asObject().setProperty("adminView", av);
-					window.asObject().setProperty("mainView", mv);	
+					window.asObject().setProperty("mainView", mv);
+					window.asObject().setProperty("loginView", lv);
 					window.asObject().setProperty("result", result);
 				}  
 			});
@@ -647,7 +682,6 @@ class jdbcDB2Sample
 			case "Video Game":
 			case "TV Series":
 				queries = new String[3];
-				System.out.println("hi");
 				queries[0] = "DROP VIEW result";
 				if (inputText.trim().equals("")) {
 					queries[1] = "CREATE VIEW result AS "
@@ -837,16 +871,28 @@ class jdbcDB2Sample
 			
 		}
 
-		public void addUser(String name, String DOB, String email, String country){
-			String[] queries = new String[1];
-			queries[0] = "INSERT INTO WikiUser VALUES (0, '"+ name + "', '" + DOB + "', '" + email + "', '" + country + "' )";
+		public void addUser(String name, String DOB, String email, String hashedPassword, String country) throws NoSuchAlgorithmException{
+			MessageDigest md;
+			md = MessageDigest.getInstance("MD5");
+			byte[] thedigest = md.digest(hashedPassword.getBytes());
+			BigInteger bigInt = new BigInteger(1,thedigest);
+			String hashtext = bigInt.toString(16);
+			// Now we need to zero pad it if you actually want the full 32 chars.
+			while(hashtext.length() < 32 ){
+				hashtext = "0"+hashtext;
+			}
+			String[] queries = new String[3];
+			queries[0] = "INSERT INTO WikiUser VALUES (0, '"+ name + "', '" + DOB + "', '" + email + "', '" + hashtext + "', '" + country + "' )";
 			queries[1] = "INSERT INTO Reviewer VALUES( 0, wikiuser_seq.CURRVAL)";
 			queries[2] = "INSERT INTO Manages VALUES ( " + this.AdminID + ", wikiuser_seq.CURRVAL)";
+			System.out.println(queries[0]);
+			System.out.println(queries[1]);
+			System.out.println(queries[2]);
 			SendQuery(con, queries, 0);
 		}
 
-		// TODO: Update Javascript to handle these two fields -> it works now
-		public void addItem(String ID, String name, String ageRestriction, String link, String country, String type, String genre){
+
+		public void addItem(String name, String ageRestriction, String link, String country, String type, String genre){
 			String[] queries = new String[1];
 			queries[0] = "INSERT INTO Item VALUES (0, '" +  name + "', " + ageRestriction + ", 0.0, 0, 0.0, '" + link + "', '" + country + "', '" + type + "', '" + genre + "')";
 			System.out.println(queries[0]);
