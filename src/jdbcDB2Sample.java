@@ -176,7 +176,6 @@ class jdbcDB2Sample
 		}
 
 		public boolean login(String username, String password){
-			//TODO: Hash password
 			System.out.println("Attempting to log in");
 			MessageDigest md;
 			try {
@@ -920,6 +919,7 @@ class jdbcDB2Sample
 		}
 		
 		public void evaluateReview(String ID, String status) {
+			// TODO: Fix the dropdown
 			String[] queries = new String[2];
 			queries[0] = "UPDATE Review SET review_status ='" + status + "' WHERE review_id = " + ID;
 			queries[1] = "INSERT INTO Evaluates VALUES (" + this.AdminID + ", " + ID + ")";
@@ -953,7 +953,7 @@ class jdbcDB2Sample
 			int iterationCounter = 0;
 			for (int x = 0; x < query.length; x++){
 				ResultSet rs = stmt.executeQuery(query[x]);
-				if (query[x].startsWith("DROP") || query[x].startsWith("CREATE") || query[x].startsWith("DELETE") || query[x].startsWith("INSERT")) {
+				if (query[x].startsWith("DROP") || query[x].startsWith("CREATE") || query[x].startsWith("DELETE") || query[x].startsWith("INSERT") || query[x].startsWith("UPDATE")) {
 					continue;
 				}
 				while(rs.next())
