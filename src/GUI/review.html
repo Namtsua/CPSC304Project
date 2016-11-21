@@ -77,6 +77,9 @@ function DisplayMainView() {
 function DisplayItemView() {
   window.itemView.load();
 }
+function DisplayLoginView() {
+    window.loginView.load();
+}
 function Query() {
     var input = document.getElementById('SearchInput').value;
    // window.searchQuery.search(filter, input);
@@ -97,6 +100,7 @@ function QueryPredefined(buttonID) {
                 <a class="navbar-brand" href="#" style="color: #000000" onClick="DisplayItemView();return false;">Items</a>
         </div>
         <div class="collapse navbar-collapse navbar-right" id="myNavbar">
+                <a class="navbar-brand" href="#" style="color: #FFFFFF" onClick="DisplayLoginView();return false;">Sign Out</a>
                 <a id="AdminModeButton" title="Admin Mode" href="#" data-toggle="tooltip" data-placement="bottom" onclick="DisplayAdminView();return false;" style="color: #FFFFFF">
                 <span class="glyphicon glyphicon-cog"></span>
             </a>

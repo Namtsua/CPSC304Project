@@ -19,7 +19,16 @@
     }
 
     p {
-        font-size: 32px;
+    font-family: Droid Sans;
+    font-size: 32px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+    a {
+        font-family: Droid Sans;
     }
 
     h2 {
@@ -59,7 +68,7 @@
         border-radius: 0;
         margin-bottom: 0;
         font-size: 12px;
-        letter-spacing: 5px;
+        letter-spacing: 0px;
     }
 
 
@@ -81,6 +90,9 @@ function DisplayItemView() {
 function DisplayReviewView() {
   window.reviewView.load();
 }
+function DisplayLoginView() {
+    window.loginView.load();
+}
 function Query() {
     var input = document.getElementById('SearchInput').value;
    // window.searchQuery.search(filter, input);
@@ -101,6 +113,7 @@ function QueryPredefined(buttonID) {
                 <a class="navbar-brand" href="#" style="color: #000000" onClick="DisplayItemView();return false;">Items</a>
         </div>
         <div class="collapse navbar-collapse navbar-right" id="myNavbar">
+                <a class="navbar-brand" href="#" style="color: #FFFFFF" onClick="DisplayLoginView();return false;">Sign Out</a>                          
                 <a id="AdminModeButton" title="Admin Mode" href="#" data-toggle="tooltip" data-placement="bottom" onclick="DisplayAdminView();return false;" style="color: #FFFFFF">
                 <span class="glyphicon glyphicon-cog"></span>
             </a>
@@ -160,7 +173,7 @@ var filter = "All";
             $('#AdminModeButton').hide();
         // MAKE VIEW FOR REVIEW RESULTS?
       for (var i = 0 ; i < (window.result).length(); i++){
-      $('#result'+i).html("<div class='container'><p class ='text-primary'>Review for " + window.result[i][6] + " by " +  window.result[i][5] + ": " + window.result[i][2] + "<small class='text-primary'> " + window.result[i][1] + "</small></p>");
+      $('#result'+i).html("<div class='container'><p class ='text-primary'>Review for " + window.result[i][6] + " by " +  window.result[i][5] + ": " + window.result[i][2] + "<small class='text-primary'> " + window.result[i][1] + "</small></p><br>");
       $('#ResultList').append('<p id="result'+(i+1)+'"></p>');
       }   
     }); 

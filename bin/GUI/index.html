@@ -7,10 +7,76 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link href="http://fonts.googleapis.com/css?family=Droid%20Sans" rel="stylesheet">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="../../js/jquery-3.1.1.js"></script>
+    <script src="../../js/Parsley.js-2.6.0/dist/parsley.min.js"></script>
 </head>
+<style>
+    h3 {
+        font-family: "Droid Sans";
+    }
 
+    a {
+        font-family: "Droid Sans";
+    }
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    border-color: #FF8400;
+    background-color: #FF8400 !important;
+}
+
+.text-warning, .text-warning:hover, .text-warning:active, .text-warning:visited {
+    border-color: #FF8400;
+}
+
+
+    .glyphicon.glyphicon-cog {
+        font-size: 30px;
+    }
+    .navbar {
+        padding-top: 15px;
+        padding-bottom: 12px;
+        border: 0;
+        border-radius: 0;
+        margin-bottom: 0;
+        font-size: 12px;
+        letter-spacing: 0px;
+    }
+
+    input.parsley-success,
+select.parsley-success,
+textarea.parsley-success {
+  color: #468847;
+  background-color: #DFF0D8;
+  border: 1px solid #D6E9C6;
+}
+
+input.parsley-error,
+select.parsley-error,
+textarea.parsley-error {
+  color: #B94A48;
+  background-color: #F2DEDE;
+  border: 1px solid #EED3D7;
+}
+
+.parsley-errors-list {
+  margin: 2px 0 3px;
+  padding: 0;
+  list-style-type: none;
+  font-size: 0.9em;
+  line-height: 0.9em;
+  opacity: 0;
+
+  transition: all .3s ease-in;
+  -o-transition: all .3s ease-in;
+  -moz-transition: all .3s ease-in;
+  -webkit-transition: all .3s ease-in;
+}
+
+.parsley-errors-list.filled {
+  opacity: 1;
+}
+</style>
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
 <script>
@@ -26,16 +92,26 @@ function Login() {
         window.mainView.load();
 }
 </script>
+<nav class="navbar navbar-fixed-top" style="background-color:   #3b5998">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#" style="color: #3b5998; font-family:Franklin Gothic Demi">Shamazon</a>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+
 <div id="login" class="container-fluid bg-4 text-center">
-    <h3>Login</h3>
-    <br>
+    <img src="../../resources/shamazon.png" alt="Logo" class="img-responsive">
     <div class="login-form-1">
         <form id="login-form" class="text-left">
             <div class="login-form-main-message"></div>
             <div class="main-login-form">
                 <div class="login-group">
                     <div class="form-group">
-                        <input type="tetx" class="form-control" id="UserEmail" placeholder="Email Address">
+                        <input type="email" class="form-control" id="UserEmail" placeholder="Email Address" data-parsley-trigger="change" data-parsley-required="true">
                     </div>
                     <div class="form-group"
 >                        <input type="password" class="form-control" id="UserPassword" placeholder="Password">
@@ -72,6 +148,18 @@ function Login() {
             });
         });
     })
+</script>
+<script type="text/javascript">
+ $(function () {
+  $('#login-form').parsley().on('field:validated', function() {
+    var ok = $('.parsley-error').length === 0;
+    $('.bs-callout-info').toggleClass('hidden', !ok);
+    $('.bs-callout-warning').toggleClass('hidden', ok);
+  })
+  .on('form:submit', function() {
+    return false; // Don't submit form for this demo
+  });
+});
 </script>
 </body>
 </html>

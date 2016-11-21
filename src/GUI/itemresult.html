@@ -19,8 +19,18 @@
     }
 
     p {
-        font-size: 32px;
+    font-family: Droid Sans;
+    font-size: 32px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+    a {
+        font-family: Droid Sans;
     }
+
 
     h2 {
         line-height: 70%;
@@ -58,7 +68,7 @@
         border-radius: 0;
         margin-bottom: 0;
         font-size: 12px;
-        letter-spacing: 5px;
+        letter-spacing: 0px;
     }
 </style>
 
@@ -74,6 +84,9 @@ function DisplayItemView() {
 }
 function DisplayReviewView() {
   window.reviewView.load();
+}
+function DisplayLoginView() {
+    window.loginView.load();
 }
 function Query() {
     var input = document.getElementById('SearchInput').value;
@@ -94,6 +107,7 @@ function QueryPredefined(buttonID) {
                 <a class="navbar-brand" href="#" style="color: #000000" onClick="DisplayReviewView();return false;">Reviews</a>
         </div>
         <div class="collapse navbar-collapse navbar-right" id="myNavbar">
+                <a class="navbar-brand" href="#" style="color: #FFFFFF" onClick="DisplayLoginView();return false;">Sign Out</a>                
                 <a id="AdminModeButton" title="Admin Mode" href="#" data-toggle="tooltip" data-placement="bottom" onclick="DisplayAdminView();return false;" style="color: #FFFFFF">
                 <span class="glyphicon glyphicon-cog"></span>
             </a>
