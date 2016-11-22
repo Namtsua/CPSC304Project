@@ -159,13 +159,22 @@ function AddItem() {
 // Evaluates a review
 function EvaluateReview() {
   var RID = document.getElementById('ReviewID').value;
-  window.adminQuery.evaluateReview(RID, 'Rejected');
+  var decision = document.getElementById('EvalDecision').value;
+  window.adminQuery.evaluateReview(RID, decision);
 }
 
 // Finds a single user
 function SingleUserQuery() {
   var value = document.getElementById('SearchUID').value;
     window.userResultView.load(value);
+}
+
+function FindAverage() {
+  window.reviewResultView.specialLoad('Average');
+}
+
+function FindApproved() {
+  window.reviewResultView.specialLoad('Approved');
 }
 
 </script>
@@ -263,14 +272,8 @@ function SingleUserQuery() {
     </div>
     <div class="form-group row">
       <label for="EvalDecision" class="col-xs-3 col-form-label text-muted">Evaluation</label>
-      <div class="col-xs-6 input-group">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Pending
-            <span class="glyphicon glyphicon-menu-down"></span></button>
-            <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu1">
-                <li><a href="#">Pending</a></li>
-                <li><a href="#">Approved</a></li>
-                <li><a href="#">Rejected</a></li>
-            </ul>
+      <div class="col-xs-6">
+        <input type="email" class="form-control" id="EvalDecision" placeholder="Approved or Rejected">
       </div>
     </div>
     <div class="form-group row">
@@ -362,6 +365,17 @@ function SingleUserQuery() {
   </form>
 </div>
 
+<div class="container">
+    <h3 class="text-primary">Find Average Rating For Each Item</h3>
+    <button type="submit" class="btn btn-primary" onClick="FindAverage();">Remove</button>
+</div>
+<br>
+
+<div class="container">
+    <h3 class="text-primary">Find All Approved Reviews</h3>
+    <button type="submit" class="btn btn-primary" onClick="FindApproved();">Remove</button>
+</div>
+<br>
 <script>
    var filter = "Pending";
    // This JS/JQuery function is based off the one here: http://stackoverflow.com/questions/13437446/how-to-display-selected-item-in-bootstrap-button-dropdown-title

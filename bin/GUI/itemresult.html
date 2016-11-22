@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Spencer Austman, e3u9a - My Suburban Library (MySQL) -->
+<!-- HTML for the Item Result view-->
 <html lang="en">
 <head>
     <title>CPSC 304 Project</title>
@@ -93,6 +95,7 @@ function Query() {
     window.resultView.load(filter, input);
 }
 
+// Add a Review
 function AddReview() {
   var text = document.getElementById('ReviewComment').value;
   var rating = document.getElementById('ItemRating').value;
@@ -100,10 +103,9 @@ function AddReview() {
   window.searchQuery.addReview(text, rating, "2", itemID);
 }
 
-function QueryPredefined(buttonID) {
-    window.searchQuery.searchPredefined(buttonID);
-}
 </script>
+<!-- Unless otherwise specified, the majority of the Bootstrap/HTML is based on the official Bootstrap documentation and W3Schools -->
+
 <nav class="navbar navbar-fixed-top" style="background-color:   #3b5998">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -166,6 +168,7 @@ function QueryPredefined(buttonID) {
 
 <script>
 var filter = "All";
+// This JS/JQuery function is based off the one here: http://stackoverflow.com/questions/13437446/how-to-display-selected-item-in-bootstrap-button-dropdown-title
     $(".dropdown-menu li a").click(function(){
   $(this).parents(".input-group-btn").find('.btn').html($(this).text() + ' <span class="caret"></span>');
   $(this).parents(".input-group-btn").find('.btn').val($(this).data('value'));
@@ -177,6 +180,7 @@ var filter = "All";
       // If not in admin mode, don't display Admin Button
       if (!window.isAdmin)
             $('#AdminModeButton').hide();
+      // Based on : http://stackoverflow.com/questions/27411287/how-to-dynamically-add-row-in-bootstrap
       for (var i = 0 ; i < (window.result).length(); i++){
       $('#result'+i).html("<div class='container'><p class ='text-muted'>" + window.result[i][0] + " <small class='text-primary'> " + window.result[i][1] + ": Rated " + window.result[i][3] + "/5</small></p><h2 class='text-primary'><small>Genre: " + window.result[i][7] + " and Type: " + window.result[i][6] + "</small></h2><h2 class='text-primary'><small>For ages " + window.result[i][2] + " and up</small></h2><h2 class='text-primary'><small>Available in " + window.result[i][5] + " at: " + window.result[i][4] + "</small></h2></div>");
       $('#ResultList').append('<p id="result'+(i+1)+'"></p>');
