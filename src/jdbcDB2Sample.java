@@ -313,6 +313,12 @@ class jdbcDB2Sample
 					urv.setParentFrame(parent);
 					urv.setAdminMode(isAdmin);
 					urv.setCurrentUser(ID);
+					ReviewResultView rrv = new ReviewResultView();
+					rrv.setConnection(con);
+					rrv.setParentBrowser(browser); 
+					rrv.setParentFrame(parent);
+					rrv.setAdminMode(isAdmin);
+					rrv.setCurrentUser(ID);
 					AdminQuery aq = new AdminQuery();
 					aq.setConnection(con);
 					aq.setCurrentUser(ID);
@@ -322,6 +328,7 @@ class jdbcDB2Sample
 					window.asObject().setProperty("reviewView", rv);
 					window.asObject().setProperty("itemView", iv);
 					window.asObject().setProperty("userResultView", urv);
+					window.asObject().setProperty("reviewResultView", rrv);
 				}  
 			});
 		}
@@ -643,6 +650,58 @@ class jdbcDB2Sample
 			});
 		}
 
+		public void specialLoad(String inputText) {
+			this.browser.loadURL("file://C:/Users/Spencer/Desktop/CS304/CPSC304Project/src/GUI/reviewresult.html");
+			final JFrame parent = this.parent;
+			final Connection con = this.con;
+			final boolean isAdmin = this.isAdmin;
+			final String ID = this.ID;
+			parent.setResizable(false);
+			parent.setLocationRelativeTo(null);
+			parent.setVisible(true);
+			SearchQuery sq = new SearchQuery();
+			sq.setConnection(con);
+			final String[][] result = sq.AverageReview();
+			this.queryResult = result;
+
+			this.browser.addScriptContextListener(new ScriptContextAdapter() {
+				@Override
+				public void onScriptContextCreated(ScriptContextEvent event) {
+					Browser browser = event.getBrowser();
+					JSValue window = browser.executeJavaScriptAndReturnValue("window");
+					AdminView av = new AdminView();
+					av.setParentFrame(parent);
+					av.setParentBrowser(browser);
+					av.setConnection(con);
+					av.setAdminMode(isAdmin);
+					av.setCurrentUser(ID);
+					MainView mv = new MainView();
+					mv.setParentFrame(parent);
+					mv.setParentBrowser(browser);
+					mv.setConnection(con);
+					mv.setAdminMode(isAdmin);
+					mv.setCurrentUser(ID);
+					LoginView lv = new LoginView();
+					lv.setParentFrame(parent);
+					lv.setParentBrowser(browser);
+					lv.setAdminMode(isAdmin);
+					lv.setConnection(con);
+					lv.setCurrentUser(ID);
+					SearchQuery sq = new SearchQuery();
+					sq.setConnection(con);
+					window.asObject().setProperty("adminView", av);
+					window.asObject().setProperty("mainView", mv);
+					window.asObject().setProperty("loginView", lv);
+					window.asObject().setProperty("result", result);
+					window.asObject().setProperty("ID", ID);
+					window.asObject().setProperty("searchQuery", sq);
+				}  
+			});
+		}
+
+		
+		
+		
 		public void setCurrentUser(String ID) {
 			this.ID = ID;
 		}
@@ -933,6 +992,12 @@ class jdbcDB2Sample
 			SendQuery(con, queries, 0);
 		}
 
+		// Find average rating/item
+		public String[][] AverageReview() {
+			String[] queries = new String[1];
+			queries[0] = "select item_id, count(review_id), AVG(reviewer_rating) from review group by item_id";
+			return SendQuery(con, queries, 4);
+		}
 		public void setConnection(Connection con) {
 			this.con = con;
 		}
@@ -1004,7 +1069,7 @@ class jdbcDB2Sample
 			// TODO: Fix the dropdown
 			String[] queries = new String[2];
 			queries[0] = "UPDATE Review SET review_status ='" + status + "' WHERE review_id = " + ID;
-			queries[1] = "INSERT INTO Evaluates VALUES (" + this.AdminID + ", " + ID + ")";
+			queries[1] = "INSERT INTO Evaluates VALUES (0 , " + ID + ")";
 			SendQuery(con, queries, 0);
 		}
 

@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Spencer Austman, e3u9a - My Suburban Library (MySQL) -->
+<!-- HTML for the Review view-->
 <html lang="en">
 <head>
     <title>CPSC 304 Project</title>
@@ -86,11 +88,9 @@ function Query() {
     window.reviewResultView.load(filter, input);
 }
 
-
-function QueryPredefined(buttonID) {
-    window.searchQuery.searchPredefined(buttonID);
-}
 </script>
+<!-- Unless otherwise specified, the majority of the Bootstrap/HTML is based on the official Bootstrap documentation and W3Schools -->
+
 <nav class="navbar navbar-fixed-top" style="background-color:   #3b5998">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -141,6 +141,7 @@ $(window).load(function() {
     }); 
 
 var filter = "Item";
+// This JS/JQuery function is based off the one here: http://stackoverflow.com/questions/13437446/how-to-display-selected-item-in-bootstrap-button-dropdown-title
     $(".dropdown-menu li a").click(function(){
   $(this).parents(".input-group-btn").find('.btn').html($(this).text() + ' <span class="caret"></span>');
   $(this).parents(".input-group-btn").find('.btn').val($(this).data('value'));
