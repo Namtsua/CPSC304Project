@@ -214,7 +214,7 @@ class jdbcDB2Sample
 						}
 						else {
 							System.out.println("Admin mode should be on");
-							queries[0] = "SELECT wiki_user_id FROM Wikiuser WHERE wiki_user_email = '" + username +"'";
+							queries[0] = "SELECT admin_id FROM Admin a, Wikiuser w WHERE admin_id = w.wiki_user_id AND w.wiki_user_email = '" + username +"'";
 							result = SendQuery(this.con, queries, 2);
 							System.out.println("goodbye and user id is " + result[0][0]);
 							setAdminMode(true);
@@ -508,7 +508,7 @@ class jdbcDB2Sample
 			parent.setResizable(false);
 			parent.setLocationRelativeTo(null);
 			parent.setVisible(true);
-			SearchQuery sq = new SearchQuery();
+			final SearchQuery sq = new SearchQuery();
 			sq.setConnection(con);
 			final String[][] result = sq.search(filter, inputText);
 			this.queryResult = result;
@@ -536,10 +536,12 @@ class jdbcDB2Sample
 					lv.setAdminMode(isAdmin);
 					lv.setConnection(con);
 					lv.setCurrentUser(ID);
+					sq.setConnection(con);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);
 					window.asObject().setProperty("loginView", lv);
 					window.asObject().setProperty("result", result);
+					window.asObject().setProperty("searchQuery", sq);
 				}  
 			});
 		}
@@ -615,10 +617,14 @@ class jdbcDB2Sample
 					lv.setAdminMode(isAdmin);
 					lv.setConnection(con);
 					lv.setCurrentUser(ID);
+					SearchQuery sq = new SearchQuery();
+					sq.setConnection(con);
 					window.asObject().setProperty("adminView", av);
 					window.asObject().setProperty("mainView", mv);
 					window.asObject().setProperty("loginView", lv);
 					window.asObject().setProperty("result", result);
+					window.asObject().setProperty("ID", ID);
+					window.asObject().setProperty("searchQuery", sq);
 				}  
 			});
 		}
@@ -766,25 +772,25 @@ class jdbcDB2Sample
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
 				if (inputText.trim().equals("")) {
-					queries[1] = "CREATE VIEW result AS SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id "
-							+ "FROM Review";
+					queries[1] = "CREATE VIEW result AS SELECT r.review_id, r.review_text, r.reviewer_rating, r.rating_of_review, r.review_status, r.wiki_user_id, r.item_id, i.item_name, w.wiki_user_name "
+							+ "FROM Review r, Item i, WikiUser w WHERE r.wiki_user_id = w.wiki_user_id AND r.item_id = i.item_id ORDER BY r.review_id";
 				} else {
-					queries[1] = "CREATE VIEW result AS SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id "
-							+ "FROM Review WHERE item_id IN "
-							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS varchar(20)) LIKE '%" + inputText + "%' OR item_name LIKE '%" + inputText + "%')";
+					queries[1] = "CREATE VIEW result AS SELECT r.review_id, r.review_text, r.reviewer_rating, r.rating_of_review, r.review_status, r.wiki_user_id, r.item_id, i.item_name, w.wiki_user_name"
+							+ "FROM Review r, Item i, WikiUser w WHERE r.wiki_user_id = w.wiki_user_id AND r.item_id = i.item_id AND r.item_id IN "
+							+ "(SELECT item_id FROM Item WHERE CAST(item_id AS varchar(20)) LIKE '%" + inputText + "%' OR item_name LIKE '%" + inputText + "%') ORDER BY r.review_id";
 				}
 				queries[2] = "SELECT * FROM result";
-				return SendQuery(con, queries, 8);
+				return SendQuery(con, queries, 10);
 			case "User":
 				queries = new String[3];
 				queries[0] = "DROP VIEW result";
 				if (inputText.trim().equals("")) {
-					queries[1] = "CREATE VIEW result AS SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id "
-							+ "FROM Review";
+					queries[1] = "CREATE VIEW result AS SELECT r.review_id, r.review_text, r.reviewer_rating, r.rating_of_review, r.review_status, r.wiki_user_id, r.item_id, i.item_name, w.wiki_user_name "
+							+ "FROM Review r, Item i, WikiUser w WHERE r.wiki_user_id = w.wiki_user_id AND r.item_id = i.item_id ORDER BY r.review_id";
 				} else {
 					queries[1] = "CREATE VIEW result AS "
-							+ "SELECT review_id, review_text, reviewer_rating, rating_of_review, review_status, wiki_user_id, item_id "
-							+ "FROM Review WHERE CAST(wiki_user_id AS varchar(20)) LIKE '%" + inputText + "%' ";
+							+ "SELECT r.review_id, r.review_text, r.reviewer_rating, r.rating_of_review, r.review_status, r.wiki_user_id, r.item_id, i.item_name, w.wiki_user_name "
+							+ "FROM Review r, Item i, WikiUser w WHERE r.wiki_user_id = w.wiki_user_id AND r.item_id = i.item_id AND CAST(r.wiki_user_id AS varchar(20)) LIKE '%" + inputText + "%' ORDER BY r.review_id";
 				}
 				queries[2] = "SELECT * FROM result";
 				return SendQuery(con, queries, 8);
@@ -819,6 +825,31 @@ class jdbcDB2Sample
 			}
 		}
 
+
+		public void addReview(String text, String rating, String userID, String itemID){
+			System.out.println("I'm here");
+			String[] queries = new String[3];
+			queries[0] = "INSERT INTO Review VALUES (0, '" + text + "', '" + rating + "', 0, 0, 0, 'Pending', '" + userID + "', '" + itemID + "')";
+			queries[1] = "UPDATE Item SET num_ratings_of_item_rating = num_ratings_of_item_rating + 1, total_item_rating = total_item_rating + " + rating + " WHERE item_id = '" + itemID + "'";
+			queries[2] = "UPDATE Item SET item_rating = total_item_rating / num_ratings_of_item_rating WHERE item_id = '" + itemID + "'";
+			System.out.println(queries[0]);
+			System.out.println(queries[1]);
+			System.out.println(queries[2]);
+			SendQuery(con, queries, 0);
+		}
+		public void rateReview(String userID, String userRating, String reviewID){
+			System.out.println("I'm here with " + userID);
+			String[] queries = new String[3];
+			queries[0] = "UPDATE Review SET num_rating_of_review = num_rating_of_review + 1, total_rating_of_review = total_rating_of_review + " + userRating + "WHERE review_id = '" + reviewID + "'";
+			queries[1] = "UPDATE Review SET rating_of_review = total_rating_of_review / num_rating_of_review WHERE review_id = '" + reviewID + "'";
+			queries[2] = "INSERT INTO Rates VALUES( '" + userID + "' ,'" + reviewID + "', '" + userRating + "')";
+			System.out.println(queries[0]);
+			System.out.println(queries[1]);
+			System.out.println(queries[2]);
+			SendQuery(con, queries, 0);
+		}
+		
+		
 		private void highestRatedItems(){
 			String[] queries = new String[3];
 			queries[0] = "SELECT * FROM result ORDER BY item_rating DESC;";
@@ -910,7 +941,7 @@ class jdbcDB2Sample
 			queries[0] = "DELETE FROM Item WHERE item_id = " + ID;
 			SendQuery(con, queries, 0);
 		}
-
+		
 		//TODO: Add this? Unsure where it goes
 		public void removeReview(String ID) {
 			String [] queries = new String[1];
