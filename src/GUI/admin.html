@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Spencer Austman, e3u9a - My Suburban Library (MySQL) -->
+<!-- HTML for the Admin view-->
 <html lang="en">
 <head>
     <title>CPSC 304 Project</title>
@@ -103,26 +105,37 @@ textarea.parsley-error {
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
 <script>
+// Displays the Main View (no longer used)
 function DisplayMainView() {
   window.mainView.load();
 }
+// Displays the Item View
 function DisplayItemView() {
   window.itemView.load();
 }
+// Displays the Review View
 function DisplayReviewView() {
   window.reviewView.load();
 }
+
+// Displays the Login View
 function DisplayLoginView() {
     window.loginView.load();
 }
+
+// Removes a User
 function RemoveUser() {
   var UserID = document.getElementById('RemovedUserID').value;
   window.adminQuery.removeUser(UserID);
 }
+
+// Removes an Item
 function RemoveItem() {
   var ItemID = document.getElementById('RemovedItemID').value;
   window.adminQuery.removeItem(ItemID);
 }
+
+// Adds a user
 function AddUser() {
   var name = document.getElementById('UserName').value;
   var DOB = document.getElementById('DateOfBirth').value;
@@ -131,6 +144,8 @@ function AddUser() {
   var password = document.getElementById('UserPassword').value;
   window.adminQuery.addUser(name, DOB, email, password, country);
 }
+
+// Adds an Item
 function AddItem() {
   var itemName = document.getElementById('ItemName').value;
   var ageRestriction = document.getElementById('AgeRestriction').value;
@@ -141,21 +156,21 @@ function AddItem() {
   window.adminQuery.addItem(itemName, ageRestriction, link, country, type, genre);
 }
 
+// Evaluates a review
 function EvaluateReview() {
   var RID = document.getElementById('ReviewID').value;
   window.adminQuery.evaluateReview(RID, 'Rejected');
 }
 
+// Finds a single user
 function SingleUserQuery() {
   var value = document.getElementById('SearchUID').value;
-//  var searchUID = new Array(value);
-   // window.searchQuery.search(filter, input);
     window.userResultView.load(value);
 }
 
 </script>
 
-
+<!-- Unless otherwise specified, the majority of the Bootstrap/HTML is based on the official Bootstrap documentation and W3Schools -->
 <nav class="navbar navbar-fixed-top" style="background-color:   #3b5998">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -217,7 +232,7 @@ function SingleUserQuery() {
     <div class="form-group row">
       <label for="UserCountry" class="col-xs-3 col-form-label text-muted">Country</label>
       <div class="col-xs-6">
-        <input type="DOB" class="form-control" id="UserCountry" placeholder="Country" maxlength="20">
+        <input type="Country" class="form-control" id="UserCountry" placeholder="Country" maxlength="20">
       </div>
     </div>
     <div class="form-group row">
@@ -234,6 +249,9 @@ function SingleUserQuery() {
   </form>
 </div>
 
+
+<!--http://stackoverflow.com/questions/19227496/scrollable-menu-with-bootstrap-3-menu-expanding-its-container-when-it-should-n-->
+<!-- Updating dropdown: http://stackoverflow.com/questions/13437446/how-to-display-selected-item-in-bootstrap-button-dropdown-title-->
 <div class="container">
   <form>
     <h3 class="text-primary">Evaluate Review</h3>
@@ -346,6 +364,7 @@ function SingleUserQuery() {
 
 <script>
    var filter = "Pending";
+   // This JS/JQuery function is based off the one here: http://stackoverflow.com/questions/13437446/how-to-display-selected-item-in-bootstrap-button-dropdown-title
     $(".dropdown-menu li a").click(function(){
   $(this).parents(".col-xs-6").find('.btn').html($(this).text() + ' <span class="caret"></span>');
   $(this).parents(".col-xs-6").find('.btn').val($(this).data('value'));
@@ -353,12 +372,14 @@ function SingleUserQuery() {
   
 });
 
-
     $(document).ready(function() {
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
+
 <script type="text/javascript">
+ 
+  // This script is from the official ParsleyJS examples http://parsleyjs.org/doc/examples.html
  $(function () {
   $('#UserForm').parsley().on('field:validated', function() {
     var ok = $('.parsley-error').length === 0;
@@ -366,7 +387,7 @@ function SingleUserQuery() {
     $('.bs-callout-warning').toggleClass('hidden', ok);
   })
   .on('form:submit', function() {
-    return false; // Don't submit form for this demo
+    return false;
   });
 });
 </script>

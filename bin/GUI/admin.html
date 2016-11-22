@@ -145,6 +145,14 @@ function EvaluateReview() {
   var RID = document.getElementById('ReviewID').value;
   window.adminQuery.evaluateReview(RID, 'Rejected');
 }
+
+function SingleUserQuery() {
+  var value = document.getElementById('SearchUID').value;
+//  var searchUID = new Array(value);
+   // window.searchQuery.search(filter, input);
+    window.userResultView.load(value);
+}
+
 </script>
 
 
@@ -172,14 +180,14 @@ function EvaluateReview() {
   <form>
     <h3 class="text-primary">Find User</h3>
     <div class="form-group row">
-      <label for="inputEmail3" class="col-xs-3 col-form-label text-muted">User ID</label>
+      <label for="SearchUID" class="col-xs-3 col-form-label text-muted">User ID</label>
       <div class="col-xs-6">
-        <input type="email" class="form-control" id="inputEmail3" placeholder="Item ID">
+        <input type="email" class="form-control" id="SearchUID" placeholder="User ID">
       </div>
     </div>
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <button type="submit" class="btn btn-primary">Add Item</button>
+        <button type="submit" class="btn btn-primary" onClick="SingleUserQuery();">Search</button>
       </div>
     </div>
   </form>
@@ -220,7 +228,7 @@ function EvaluateReview() {
     </div>
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <button type="submit" class="btn btn-primary" onClick="AddUser();">Create User</button>
+        <button type="submit" class="btn btn-primary" onClick="AddUser(); window.alert('User Created!');">Create User</button>
       </div>
     </div>
   </form>
@@ -249,7 +257,7 @@ function EvaluateReview() {
     </div>
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <button type="submit" class="btn btn-primary" onClick="EvaluateReview();return false;">Evaluate Review</button>
+        <button type="submit" class="btn btn-primary" onClick="EvaluateReview(); window.alert('Review Evaluated!');">Evaluate Review</button>
       </div>
     </div>
   </form>
@@ -296,7 +304,7 @@ function EvaluateReview() {
     </div>
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <button type="submit" class="btn btn-primary" onClick="AddItem();">Add Item</button>
+        <button type="submit" class="btn btn-primary" onClick="AddItem(); window.alert('Item Added!');">Add Item</button>
       </div>
     </div>
   </form>
@@ -313,7 +321,7 @@ function EvaluateReview() {
     </div>
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <button type="submit" class="btn btn-primary" onClick="RemoveItem();">Remove</button>
+        <button type="submit" class="btn btn-primary" onClick="RemoveItem(); window.alert('Item Removed!');">Remove</button>
       </div>
     </div>
   </form>
@@ -330,7 +338,7 @@ function EvaluateReview() {
     </div>
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <button type="submit" class="btn btn-primary" onClick="RemoveUser();">Remove</button>
+        <button type="submit" class="btn btn-primary" onClick="RemoveUser(); window.alert('User Removed!');">Remove</button>
       </div>
     </div>
   </form>
