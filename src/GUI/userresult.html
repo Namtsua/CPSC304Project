@@ -20,7 +20,7 @@
 
     p {
     font-family: Droid Sans;
-    font-size: 32px;
+    font-size: 28px;
     font-style: normal;
     font-variant: normal;
     font-weight: 400;
@@ -30,7 +30,6 @@
     a {
         font-family: Droid Sans;
     }
-
 
     h2 {
         line-height: 70%;
@@ -47,6 +46,7 @@
     max-height: 200px;
     overflow-x: hidden;
 }
+
 
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
     border-color: #FF8400;
@@ -70,6 +70,8 @@
         font-size: 12px;
         letter-spacing: 0px;
     }
+
+
 </style>
 
 
@@ -78,6 +80,9 @@
 <script>
 function DisplayAdminView() {
   window.adminView.load();
+}
+function DisplayMainView() {
+  window.mainView.load();
 }
 function DisplayItemView() {
   window.itemView.load();
@@ -90,30 +95,31 @@ function DisplayLoginView() {
 }
 function Query() {
     var input = document.getElementById('SearchInput').value;
+   // window.searchQuery.search(filter, input);
     window.resultView.load(filter, input);
 }
 
-function AddReview() {
-  var text = document.getElementById('ReviewComment').value;
-  var rating = document.getElementById('ItemRating').value;
-  var itemID = document.getElementById('ItemID').value;
-  window.searchQuery.addReview(text, rating, "2", itemID);
+function RateReview() {
+    var userRating = document.getElementById('ReviewRating').value;
+    var reviewID = document.getElementById('ReviewID').value;
+    window.searchQuery.rateReview(window.ID, userRating, reviewID);
 }
 
 function QueryPredefined(buttonID) {
     window.searchQuery.searchPredefined(buttonID);
 }
 </script>
+
 <nav class="navbar navbar-fixed-top" style="background-color:   #3b5998">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#" style="color: #FFFFFF">Shamazon</a>
-                <a class="navbar-brand" href="#" style="color: #FF8400" onClick="DisplayItemView();return false;">Items</a>
+                <a class="navbar-brand" href="#" style="color: #FF8400" onClick="DisplayReviewView();return false;">Reviews</a>
                 <a class="navbar-brand" style="color: #000000" onClick="return false;">|</a>
-                <a class="navbar-brand" href="#" style="color: #000000" onClick="DisplayReviewView();return false;">Reviews</a>
+                <a class="navbar-brand" href="#" style="color: #000000" onClick="DisplayItemView();return false;">Items</a>
         </div>
         <div class="collapse navbar-collapse navbar-right" id="myNavbar">
-                <a class="navbar-brand" href="#" style="color: #FFFFFF" onClick="DisplayLoginView();return false;">Sign Out</a>                
+                <a class="navbar-brand" href="#" style="color: #FFFFFF" onClick="DisplayLoginView();return false;">Sign Out</a>                          
                 <a id="AdminModeButton" title="Admin Mode" href="#" data-toggle="tooltip" data-placement="bottom" onclick="DisplayAdminView();return false;" style="color: #FFFFFF">
                 <span class="glyphicon glyphicon-cog"></span>
             </a>
@@ -125,7 +131,7 @@ function QueryPredefined(buttonID) {
 <br>
 <br>
 
-<p class="text-primary text-left">Results</p>
+<p class="text-primary text-left">Results:</p>
 <br>
 <div class="container" id="ResultList">
     <p id = "result0"></p>
@@ -135,29 +141,27 @@ function QueryPredefined(buttonID) {
 
 <div class="container">
   <form>
-    <h3 class="text-primary">Write A Review:</h3>
+    <h3 class="text-primary">Rate A Review:</h3>
     <div class = "form-inline">
     <div class="form-group">
-      <label for="ItemID" class="col-xs-4 col-form-label text-muted">Item ID</label>
-      <div class="col-xs-6">
-        <input type="email" class="form-control" id="ItemID" placeholder="Item ID">
+      <label for="ReviewID" class="col-xs-5 col-form-label text-muted">Review ID</label>
+      <div class="col-xs-3">
+        <input type="email" class="form-control" id="ReviewID" placeholder="Item ID">
       </div>
     </div>
     <div class="form-group">
-      <label for="ItemRating" class="col-xs-4 col-form-label text-muted">Rating</label>
-      <div class="col-xs-6">
-        <input type="email" class="form-control" id="ItemRating" placeholder="Rating">
+      <label for="ReviewRating" class="col-xs-6 col-form-label text-muted text-right ">Review Rating</label>
+      <div class="col-xs-3">
+        <input type="email" class="form-control" id="ReviewRating" placeholder="Rating">
       </div>
     </div>
     </div>
-    <div class="form-group">
-        <label for="ReviewComment" class="col-xs-4 text-muted">Your Review:</label>
-        <textarea id= "ReviewComment" type="text" class="form-control" rows="5" placeholder="Write a review..."></textarea>
-        <div class="form-group-btn">
-        <button class="btn btn-primary" type="button" onClick="AddReview();">Submit</button>
-        </div>
+    <div class="form-group row">
+        <button type="submit" class="btn btn-primary" onClick="RateReview();">Rate Review</button>
+    </div>
   </form>
 </div>
+<br>
 
 </div>
 
@@ -173,21 +177,22 @@ var filter = "All";
   
 });
 
+
     $(window).load(function() {
       // If not in admin mode, don't display Admin Button
       if (!window.isAdmin)
             $('#AdminModeButton').hide();
+        // MAKE VIEW FOR REVIEW RESULTS?
       for (var i = 0 ; i < (window.result).length(); i++){
-      $('#result'+i).html("<div class='container'><p class ='text-muted'>" + window.result[i][0] + " <small class='text-primary'> " + window.result[i][1] + ": Rated " + window.result[i][3] + "/5</small></p><h2 class='text-primary'><small>Genre: " + window.result[i][7] + " and Type: " + window.result[i][6] + "</small></h2><h2 class='text-primary'><small>For ages " + window.result[i][2] + " and up</small></h2><h2 class='text-primary'><small>Available in " + window.result[i][5] + " at: " + window.result[i][4] + "</small></h2></div>");
+      $('#result'+i).html("<div class='container'><p class ='text-primary'>#" + window.result[i][0] + ": " + window.result[i][1] + "</p><small class='text-primary'> Email:" + window.result[i][3] + "</small><br><br><small class='text-primary'>Date of Birth: " + window.result[i][2] + "</small><br><br><small class='text-primary'>Country: " + window.result[i][5] + "</small><br><br>");
       $('#ResultList').append('<p id="result'+(i+1)+'"></p>');
       }   
     }); 
 
-    
+
     $(document).ready(function() {
         $('[data-toggle="tooltip"]').tooltip();
     });
-
 </script>
 </body>
 </html>

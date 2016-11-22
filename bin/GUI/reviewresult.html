@@ -20,7 +20,7 @@
 
     p {
     font-family: Droid Sans;
-    font-size: 32px;
+    font-size: 28px;
     font-style: normal;
     font-variant: normal;
     font-weight: 400;
@@ -99,6 +99,12 @@ function Query() {
     window.resultView.load(filter, input);
 }
 
+function RateReview() {
+    var userRating = document.getElementById('ReviewRating').value;
+    var reviewID = document.getElementById('ReviewID').value;
+    window.searchQuery.rateReview(window.ID, userRating, reviewID);
+}
+
 function QueryPredefined(buttonID) {
     window.searchQuery.searchPredefined(buttonID);
 }
@@ -138,20 +144,24 @@ function QueryPredefined(buttonID) {
     <h3 class="text-primary">Rate A Review:</h3>
     <div class = "form-inline">
     <div class="form-group">
-      <label for="inputEmail3" class="col-xs-5 col-form-label text-muted">Review ID</label>
+      <label for="ReviewID" class="col-xs-5 col-form-label text-muted">Review ID</label>
       <div class="col-xs-3">
-        <input type="email" class="form-control" id="inputEmail3" placeholder="Item ID">
+        <input type="email" class="form-control" id="ReviewID" placeholder="Item ID">
       </div>
     </div>
     <div class="form-group">
-      <label for="inputEmail3" class="col-xs-6 col-form-label text-muted text-right ">Review Rating</label>
+      <label for="ReviewRating" class="col-xs-6 col-form-label text-muted text-right ">Review Rating</label>
       <div class="col-xs-3">
-        <input type="email" class="form-control" id="inputEmail3" placeholder="Rating">
+        <input type="email" class="form-control" id="ReviewRating" placeholder="Rating">
       </div>
     </div>
     </div>
+    <div class="form-group row">
+        <button type="submit" class="btn btn-primary" onClick="RateReview();">Rate Review</button>
+    </div>
   </form>
 </div>
+<br>
 
 </div>
 
@@ -167,13 +177,14 @@ var filter = "All";
   
 });
 
+
     $(window).load(function() {
       // If not in admin mode, don't display Admin Button
       if (!window.isAdmin)
             $('#AdminModeButton').hide();
         // MAKE VIEW FOR REVIEW RESULTS?
       for (var i = 0 ; i < (window.result).length(); i++){
-      $('#result'+i).html("<div class='container'><p class ='text-primary'>Review for " + window.result[i][6] + " by " +  window.result[i][5] + ": " + window.result[i][2] + "<small class='text-primary'> " + window.result[i][1] + "</small></p><br>");
+      $('#result'+i).html("<div class='container'><p class ='text-primary'>#" + window.result[i][0] + " Review for " + window.result[i][7] + " by " +  window.result[i][8] + ": </p><small class='text-primary'> " + window.result[i][1] + "</small><br><br><small class='text-primary'>Item Rating: " + window.result[i][2] + "/5 and Review Rating: " + window.result[i][3] + "/10</small><br><br>");
       $('#ResultList').append('<p id="result'+(i+1)+'"></p>');
       }   
     }); 
