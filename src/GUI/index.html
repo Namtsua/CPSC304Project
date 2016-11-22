@@ -1,6 +1,8 @@
 <!DOCTYPE html>
+<!--Spencer Austman, e3u9a - My Suburban Library (MySQL) -->
 <html lang="en">
 <head>
+    <!-- Load all of the necessary libraries/frameworks-->
     <title>CPSC 304 Project</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,6 +14,7 @@
     <script src="../../js/Parsley.js-2.6.0/dist/parsley.min.js"></script>
 </head>
 <style>
+    /* The majority of this style guide is overwriting the default styles to accomodate our design */
     h3 {
         font-family: "Droid Sans";
     }
@@ -33,6 +36,8 @@
     .glyphicon.glyphicon-cog {
         font-size: 30px;
     }
+  
+    /* Portions of this style guide were taken from my own personal website, which was subsequently inspired by W3schools*/
     .navbar {
         padding-top: 15px;
         padding-bottom: 12px;
@@ -43,6 +48,7 @@
         letter-spacing: 0px;
     }
 
+    /* The following parsley stylings were taken from Parsley's own tutorial  http://parsleyjs.org/doc/index.html#psly-installation-basic*/
     input.parsley-success,
 select.parsley-success,
 textarea.parsley-success {
@@ -80,10 +86,13 @@ textarea.parsley-error {
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
 <script>
+
+// Load main view
 function DisplayMainView() {
     window.mainView.load();
 }
 
+// Gather the required values and attempt to login
 function Login() {
     var userEmail = document.getElementById('UserEmail').value;
     var password = document.getElementById('UserPassword').value;
@@ -122,34 +131,9 @@ function Login() {
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $(".navbar a, footer a[href='#myPage']").on('click', function (event) {
-            if (this.hash !== "") {
-                event.preventDefault();
-                var hash = this.hash;
-
-                $('html, body').animate({
-                    scrollTop: $(hash).offset().top
-                }, 900, function () {
-                    window.location.hash = hash;
-                });
-            }
-        });
-
-        $(window).scroll(function () {
-            $(".slideanim").each(function () {
-                var pos = $(this).offset().top;
-
-                var winTop = $(window).scrollTop();
-                if (pos < winTop + 600) {
-                    $(this).addClass("slide");
-                }
-            });
-        });
-    })
-</script>
 <script type="text/javascript">
+ 
+    // From one of ParsleyJs's examples http://parsleyjs.org/doc/examples.html
  $(function () {
   $('#login-form').parsley().on('field:validated', function() {
     var ok = $('.parsley-error').length === 0;
@@ -157,7 +141,7 @@ function Login() {
     $('.bs-callout-warning').toggleClass('hidden', ok);
   })
   .on('form:submit', function() {
-    return false; // Don't submit form for this demo
+    return false;
   });
 });
 </script>

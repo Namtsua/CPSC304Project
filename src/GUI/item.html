@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Spencer Austman, e3u9a - My Suburban Library (MySQL) -->
+<!-- HTML for the Item view-->
 <html lang="en">
 <head>
     <title>CPSC 304 Project</title>
@@ -67,25 +69,25 @@
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
 <script>
+// Display Admin View
 function DisplayAdminView() {
   window.adminView.load();
 }
+// Display Review View
 function DisplayReviewView() {
   window.reviewView.load();
 }
+// Display Login View
 function DisplayLoginView() {
     window.loginView.load();
 }
+// Query the DB for Items
 function Query() {
     var input = document.getElementById('SearchInput').value;
-   // window.searchQuery.search(filter, input);
     window.itemResultView.load(filter, input);
 }
-
-function QueryPredefined(buttonID) {
-    window.searchQuery.searchPredefined(buttonID);
-}
 </script>
+<!-- Unless otherwise specified, the following HMTL/Bootstrap is based off of the official Bootstrap documentation (getbootstrap.com) and W3schools-->
 <nav class="navbar navbar-fixed-top" style="background-color:   #3b5998">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -153,6 +155,7 @@ function QueryPredefined(buttonID) {
 
 <script>
 var filter = "All";
+// This JS/JQuery function is based off the one here: http://stackoverflow.com/questions/13437446/how-to-display-selected-item-in-bootstrap-button-dropdown-title
     $(".dropdown-menu li a").click(function(){
   $(this).parents(".input-group-btn").find('.btn').html($(this).text() + ' <span class="caret"></span>');
   $(this).parents(".input-group-btn").find('.btn').val($(this).data('value'));

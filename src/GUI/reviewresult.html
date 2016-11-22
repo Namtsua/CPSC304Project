@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Spencer Austman, e3u9a - My Suburban Library (MySQL) -->
+<!-- HTML for the Review results page-->
 <html lang="en">
 <head>
     <title>CPSC 304 Project</title>
@@ -95,20 +97,18 @@ function DisplayLoginView() {
 }
 function Query() {
     var input = document.getElementById('SearchInput').value;
-   // window.searchQuery.search(filter, input);
     window.resultView.load(filter, input);
 }
 
+// Rate a Review
 function RateReview() {
     var userRating = document.getElementById('ReviewRating').value;
     var reviewID = document.getElementById('ReviewID').value;
     window.searchQuery.rateReview(window.ID, userRating, reviewID);
 }
 
-function QueryPredefined(buttonID) {
-    window.searchQuery.searchPredefined(buttonID);
-}
 </script>
+<!-- Unless otherwise specified, the majority of the Bootstrap/HTML is based on the official Bootstrap documentation and W3Schools -->
 
 <nav class="navbar navbar-fixed-top" style="background-color:   #3b5998">
     <div class="container-fluid">
@@ -170,6 +170,7 @@ function QueryPredefined(buttonID) {
 
 <script>
 var filter = "All";
+// This JS/JQuery function is based off the one here: http://stackoverflow.com/questions/13437446/how-to-display-selected-item-in-bootstrap-button-dropdown-title
     $(".dropdown-menu li a").click(function(){
   $(this).parents(".input-group-btn").find('.btn').html($(this).text() + ' <span class="caret"></span>');
   $(this).parents(".input-group-btn").find('.btn').val($(this).data('value'));
@@ -182,7 +183,7 @@ var filter = "All";
       // If not in admin mode, don't display Admin Button
       if (!window.isAdmin)
             $('#AdminModeButton').hide();
-        // MAKE VIEW FOR REVIEW RESULTS?
+       // Inspired by http://stackoverflow.com/questions/27411287/how-to-dynamically-add-row-in-bootstrap   
       for (var i = 0 ; i < (window.result).length(); i++){
       $('#result'+i).html("<div class='container'><p class ='text-primary'>#" + window.result[i][0] + " Review for " + window.result[i][7] + " by " +  window.result[i][8] + ": </p><small class='text-primary'> " + window.result[i][1] + "</small><br><br><small class='text-primary'>Item Rating: " + window.result[i][2] + "/5 and Review Rating: " + window.result[i][3] + "/10</small><br><br>");
       $('#ResultList').append('<p id="result'+(i+1)+'"></p>');
